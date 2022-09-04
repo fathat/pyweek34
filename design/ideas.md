@@ -82,8 +82,15 @@ Other ideas:
 
 - Oregon Trailish
 - What sort of encounters and mini games?
+  - Fixing ship and maintaining
 
 ### Risk factors:
 
 - How many encounter types, how to keep encounter types interesting in space
 - How many mini-games?
+
+## Idea #6: Earth vs. Mars
+
+- Solar system
+  - Launch attacks on other planet, using physics w/ gravity, place defenses in orbit
+- Star castle inspiration
