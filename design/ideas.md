@@ -16,11 +16,13 @@
 - Making fun/interesting -- how to make unique
 
 ## Idea #2: Chop Lifter
-
+- some kind of campaign story?
 - Shoot down ufos and bring civilians to safety
+- Transport/retrieve goods?
 - 2d physics for realism
+  - What kind of craft? Some kind of mars lander? Could give freedom to how the ship is to be controlled
   - Flappy-bird style maintaining of altitude - no hover button
-  - Ladders for rescue have string physics
+  - Space ladders for rescue have string physics
     - Could get tied up on ufo
     - IF you don't hold still, people can't climb it, and people might fall off
 - Battle UFOs
@@ -36,6 +38,11 @@
   - Combo rockets TODO
   - Grenade Launcher TODO
   - Net - Temporarily incapacitate ufo, hold it to ground, possibly attach bombs as upgrade. 
+- Environmental threats
+  - Windsheer
+  - Electrical storms. How would we indicate safe areas?
+  - Night time
+- What if everything was "space" before it. Space people, space helicopter, space storm, space robots, etc you know, to make it hilarious
 
 Upgrade system: TODO
 
@@ -81,8 +88,16 @@ Other ideas:
 ## Idea #5: Journey to Mars
 
 - Oregon Trailish
-- What sort of encounters and mini games?
-  - Fixing ship and maintaining
+
+- mini games
+  - navigate through a minefield/astroid/whatever
+  - repair, randomly lay out components then mouse is probe. hunt and peck to find bad components?
+  - 
+
+- random encounters like Crying suns
+  - choose to go through or around astroid field
+  - trading post
+  - sickness, launch into space or try to heal
 
 ### Risk factors:
 
