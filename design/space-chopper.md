@@ -32,6 +32,18 @@ Your gunner/copilot and perhaps... something more? The way her hair waves in the
 
 Your commander. Talks to you over the radio. Informs you of mission goals, targets, and areas of interest to protect. Most definitely is not wearing a wig, because he's proud to be bald.
 
+## Relationships & Plot Building
+
+### Magnus and Ingirid
+
+Both suffer from alopecia and are also too vain and embarassed to admit it, and thusly wear ostentatious wigs because of their poor taste. Many of their conversations are awkwardly talking about hair styles or feeling out how the other would react if they were to admit to their bald status.
+
+Ideally they are able to both accept each other for who they are by the end of the game and explore their budding romance, but this will depend on how the player reacts to dialogue options that pop up during the mission
+
+### Frothi Meldunsson
+
+A tough son of a bitch, he doesn't take shit from anyone. Frequently doesn't know the common words for things, and angrily demands that the attack "the bad guys with the guns... whatever you call them" or "the floaty sky things. You know what I'm fucking talking about shitheel"
+
 ## Historical Buildings
 
 - Giant Ferris Wheel
