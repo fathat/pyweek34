@@ -29,7 +29,7 @@ class MyApp(ShowBase):
         print(cam.getTransform())
         print(lens)
         self.camera.setTransform(cam.getTransform())
-        
+        self.render.ls()
 
         # Apply scale and position transforms on the model.
         #self.scene.setScale(0.25, 0.25, 0.25)
