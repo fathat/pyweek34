@@ -10,6 +10,10 @@ Need:
 - Concept art for various ships and people and stuff.
 - Lines for civilians
 
+## Top priority
+- Da chappa
+- Civilians
+
 ## Summary
 
 You are ACE SPACE PILOT Magnus Thorbergottarsson. You fly a SPACE RESCUE CHOPPER, which is like a regular helicopter, but BETTER. 
