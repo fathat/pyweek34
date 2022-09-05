@@ -124,3 +124,12 @@ Like, kinda Japan, I guess. High tech. Very clean. Same: defend historical sites
 
 We take the fight back to the Red Planet! Less civilian rescue and more crazy offense. This level should feel very cathartic as you get to fuck things up.
 
+## Technical Bullshit
+
+Two paths, must decide.
+
+* Pyglet, glsvg, pymunk. Inkscape and illustrator for art. 
+
+Or
+
+* Panda3d, pymunk, use Blender for level/building design and entity art. TBD: how well does panda handle UI and can you draw 2D stuff easily with it???????
