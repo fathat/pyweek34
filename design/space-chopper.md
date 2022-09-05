@@ -54,6 +54,28 @@ Your commander. Talks to you over the radio. Informs you of mission goals, targe
 
 Flying a space chopper is HARD WORK, only suited for the MOST SKILLED. You must be able to maintain altitude by constantly boosting and coasting. Controlling momentum is key. 
 
+### Controls
+
+Gamepad
+
+- Left analog x axis controls pitch (either tilt left or tilt right)
+- Right analog x axis controls which direction the helicopter is facing (left or right)
+- RB shoots machine gun
+- LB shoots rockets, nets, and railgun
+- D-Pad changes weapon loadout
+- A deploys ladder
+- Back deploys drops demotivational pamphlets
+- Right trigger controls throttle
+
+Keyboard
+
+- WSAD controls throttle and pitch
+- QE or arrow keys control pitch
+- Space shoots machine gun 
+- Ctrl shoots rockets/nets/railgun
+- Tab cycles weapons
+- Enter drops demotivational packets
+
 ### Weapons
 
 - Machine Gun: Good for strafing ground enemies and shooting at weak points on flying saucers and ground monsters. Infinite ammo, but requires a cooldown if shot non-stop. Gun points out from the front of the cockpit, so entire helicopter must be aimed at target. 
