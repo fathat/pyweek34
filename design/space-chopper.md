@@ -32,6 +32,10 @@ Your gunner/copilot and perhaps... something more? The way her hair waves in the
 
 Your commander. Talks to you over the radio. Informs you of mission goals, targets, and areas of interest to protect. Most definitely is not wearing a wig, because he's proud to be bald.
 
+### Evan Thompson (ET)
+
+The leader of the invaders from the red planet. He's tired of the earthlings sending their garbage rovers to his beautiful planet. He also has laser eyes see through the lies of a wig. The only being in the universe that might have better hair than Magnus.
+
 ## Relationships & Plot Building
 
 ### Magnus and Ingirid
@@ -145,6 +149,19 @@ Shoots at the bad guys. Moves veryyyy slowly, sometimes.
 ### Civilians
 
 They really want to be saved, and they sure can't do it for themselves. Good thing you're a hero with fantastic hair.
+
+#### Lines
+- Help!
+- Save me!
+- My wig is on fire!
+- Is that a wig?
+- Don't leave me!
+- I don't want to die!
+- Take me with you!
+- They're coming for us!
+- I choose life!
+- Don't let them take me!
+- They took my wig!
 
 ### Earth Dog
 
