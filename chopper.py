@@ -8,8 +8,8 @@ class chopper:
         self.bodyNode.setScale(scale, scale, scale)
         self.bodyNode.reparentTo(base.render)
 
-        self.Roter = base.loader.loadModel("models/Roter.stl")
-        self.Roter.reparentTo(self.bodyNode)
+        self.RoterNode = base.loader.loadModel("models/Roter.stl")
+        self.RoterNode.reparentTo(self.bodyNode)
 
 
         self.body = pymunk.Body(10, 100)
@@ -37,5 +37,5 @@ class chopper:
         self.bodyNode.setPos(self.pos.x,200,self.pos.y)
         self.bodyNode.setHpr(0,0,-(rot * 180/3.14))
 
-        self.Roter.setHpr(self.Roter,1800*dt,0,0)
+        self.RoterNode.setHpr(self.RoterNode,1800*dt,0,0)
         pass
