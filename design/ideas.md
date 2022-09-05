@@ -79,8 +79,35 @@ Other ideas:
 - JSON w/ comments / YAML / ini files to describe units
 
 ## Idea #4: Battlezone style First Person RTS
+1.) Start first person, weak gun, main construction yard
+2.) Send command to construction yard via number keys to create scrap collector
+3.) Initial tank
+4.) Create a gun tower
 
-- 
+
+- Order Menu
+  1.) Construction
+     1.) Recycler
+     2.) Gun Tower
+     ... etc.
+  2.) Vehicle Yard
+     1.) Build Scout
+     2.) Build Tank
+
+
+- Building types:
+  - Construction yard
+  - Recycler
+  - Machine Gun Tower
+  - Rocket Tower
+  - Laser Tower
+  - 
+
+
+- Unit types
+  - Scrap gatherer
+  - Builder/repairer
+
 ### Risk Factors
 
 - Enemy AI
