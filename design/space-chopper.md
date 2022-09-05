@@ -38,6 +38,8 @@ Your commander. Talks to you over the radio. Informs you of mission goals, targe
 
 ### Evan Thompson (ET)
 
+![Evan Thompson](../art/character-cards/et-128.png)
+
 The leader of the invaders from the red planet. Weirdly, he has a very earthling-like name, and yet nobody has yet thought to explore why this is the case. And they probably never will. People are much less curious than you might expect. He's tired of the earthlings sending their garbage rovers to his beautiful planet. He also has laser eyes see through the lies of a wig. The only being in the universe that might have better hair than Magnus.
 
 ### Mace Thornheart
