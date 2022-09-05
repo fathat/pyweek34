@@ -62,6 +62,10 @@ Has a bubble on top with a pilot, and a weak bubble on the bottom for pulling up
 
 Ditto, but also has a Rock Launcher. To throw rocks. Shit hurts when you're in a helicopter man.
 
+### Troop transport UFO
+
+Drops martian soldiers and space dogs
+
 ### Martian Soldier
 
 A martian with a gun. Why are their helmets so large?! Their heads aren't even that big you know.
