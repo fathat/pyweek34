@@ -38,7 +38,67 @@ Your commander. Talks to you over the radio. Informs you of mission goals, targe
 
 ### Evan Thompson (ET)
 
-The leader of the invaders from the red planet. He's tired of the earthlings sending their garbage rovers to his beautiful planet. He also has laser eyes see through the lies of a wig. The only being in the universe that might have better hair than Magnus.
+The leader of the invaders from the red planet. Weirdly, he has a very earthling-like name, and yet nobody has yet thought to explore why this is the case. And they probably never will. People are much less curious than you might expect. He's tired of the earthlings sending their garbage rovers to his beautiful planet. He also has laser eyes see through the lies of a wig. The only being in the universe that might have better hair than Magnus.
+
+### Mace Thornheart
+
+President and CEO of Jättefint Hår Aerospace. 
+
+## Plot Beats
+
+### Intro
+
+A group of reporters is assembled for a press conference at Jättefint Hår Aerospace. On a large screen, the CEO of the corporation appears. He is here to unveil their latest new weapon: THE SPACE CHOPPER.
+
+Off to the side, Magnus, Ingirid, and Frothi are awaiting their turn to speak. Magnus nervously adjusts his wig when he thinks nobody is looking.
+
+*Mace Thornheart begins her speech.*
+
+    Mace Thornheart:
+
+    Thank you all for attending today. We are very pleased to announce our latest life saving military vehicle. Please allow me to introduce, the SPACE CHOPPER.
+
+*Mace signals and an image of the SPACE CHOPPER appears.*
+
+    Mace Thornheart:
+
+    Along with being an excellent helicopter on earth, we are very excited that this helicopter will allow us to achieve the dream of flight on THE RED PLANET. Our Ion Wave Engine will allow the SPACE CHOPPER to fly in very low density atmospheres.
+
+*The crowd breaks into applause.*
+
+*Suddenly, the image turns to static, and a new, alien, face appears on screen*.
+
+    Evan Thompson: 
+    
+    People of earth. We are sick of you sending your garbage to our beautiful planet. After we had achieved The Great Cleaning, where the surface was pure with joyous iron sands, we went into The Great Slumber. 
+    
+    Evan Thompson: 
+    
+    We have awakened to you having made a goddamn mess of things. You just had to leave all your toys around. What are these things anyway, cameras on wheels? And all these domed cities?! A blight. We will clean up the mess you made on mars, but first, we are going to clean up your world!
+
+    Ha! Ha ha ha ha ha!! HA HA!
+
+* Evan looks to his left *
+
+    Evan Thompson:
+    
+    Hey, that was your cue to cut the feed.
+
+* Looks back at camera *
+
+    ET:
+
+    *nervously"* Ha! Ha ha ha!
+    
+    Really man, what am I paying you fo..
+
+* Feed cuts out *
+
+* Alarm begins to sound in the building, as the lights turn red. In the background, we see and hear explosions. Mars is invading *
+
+    Frothi: Magnus, Ingirid! GET TO THE CHOPPA!!!!!!
+
+* Dramatic music blares and the first level begins *
 
 ## Relationships & Plot Building
 
