@@ -19,7 +19,6 @@ class chopper:
         #shape = pymunk.Poly.create_box(body, (100*scale, 55*scale))
         shape.friction = 0.5
         space.add(self.body, shape)
-        pass
 
     def update(self,dt):
         if input.upPressed:
@@ -38,4 +37,3 @@ class chopper:
         self.bodyNode.setHpr(0,0,-(rot * 180/3.14))
 
         self.RoterNode.setHpr(self.RoterNode,1800*dt,0,0)
-        pass
