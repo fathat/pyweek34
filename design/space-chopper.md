@@ -1,5 +1,15 @@
 # RED PLANET ATTACKS
 
+## TODO ON THIS DOC:
+
+Need:
+- Dialog for Magnus and Ingirid
+- Paper level designs
+- More fleshed out background for characters.
+- Maybe some martian characters (IE, at least a villain)
+- Concept art for various ships and people and stuff.
+- Lines for civilians
+
 ## Summary
 
 You are ACE SPACE PILOT Magnus Thorbergottarsson. You fly a SPACE RESCUE CHOPPER, which is like a regular helicopter, but BETTER. 
@@ -123,6 +133,14 @@ Like, kinda Japan, I guess. High tech. Very clean. Same: defend historical sites
 ### Level #3 Mars
 
 We take the fight back to the Red Planet! Less civilian rescue and more crazy offense. This level should feel very cathartic as you get to fuck things up.
+
+## Random ideas
+
+* Enemies and civilians should occasionally have both text bubbles and thought bubbles describing their reaction to the moment
+* Magnus and Ingirid should develop their relationship by talking while the action is going on. 
+  * It would be funny to require the player to respond to conversation prompts while they're fighting, maybe with a 1/2/3 keypress.
+* Dialog should be some sort of robotic speaking thingy (not text to speech, abstract, like in Crying Suns)
+
 
 ## Technical Bullshit
 
