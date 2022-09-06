@@ -14,6 +14,11 @@ load_prc_file_data("", """
     sync-video 1
     win-size 1280 720
     window-title Space Chopper
+    want-pstats 0
+    pstats-tasks 0
+    task-timer-verbose 0
+    want-directtools #f
+    want-tk #f
 """)
 
 class RedPlanetApp(ShowBase):

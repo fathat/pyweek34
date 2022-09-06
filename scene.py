@@ -17,35 +17,17 @@ class Scene:
         self.space.gravity = (0.0, -9.8)
         distributorOfPain.init(self.space)
         self.pymunk_timer = 0.0
+       
+        self.world = app.loader.loadModel('scenes/debugscene/debugscene.glb')
+        self.worldNP = NodePath(self.world)
+        self.worldNP.reparentTo(self.app.render)
 
-        self.box = app.loader.loadModel('worldmesh/box.glb')
-        self.box2 = app.loader.loadModel('worldmesh/box.glb')
-        
-        self.boxNP = NodePath(self.box)
-        self.boxNP.reparentTo(self.app.render)
-        self.boxNP.setPos(15, 0, 25)
-        self.boxNP.setHpr(0, 0, 45)
-        
-        self.boxNP2 = NodePath(self.box2)
-        self.boxNP2.reparentTo(self.app.render)
-        self.boxNP2.setPos(0, 25, 15)
-        self.boxNP2.setHpr(0, 0, 15)
+        dlight = DirectionalLight('Sun')
+        dlnp = app.render.attachNewNode(dlight)
+        dlnp.setHpr(0, -60, 0)       
+        self.worldNP.setLight(dlnp)
 
-        add_node_path_as_collider(self.box, self.boxNP, self.space, app.render)
-
-        lines = LineSegs()
-        lines.setColor(1, 0, 0, 1)
-        lines.moveTo(-100, 0, 10)
-        lines.drawTo(100, 0, -10)
-        lines.setThickness(4)
-        node = lines.create()
-        np = NodePath(node)
-        np.reparentTo(app.render)
-
-        shape = pymunk.Segment(self.space.static_body, Vec2d(-100, 10), Vec2d(100, -10), 0.0)
-        shape.friction = 1.0
-        shape.filter = pymunk.ShapeFilter(categories=utils.CATEGORY_WALL)
-        self.space.add(shape)
+        add_node_path_as_collider(self.world, self.worldNP, self.space, app.render)
 
         self.chopper = chopper.Chopper(app, self.space)
 
