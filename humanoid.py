@@ -1,29 +1,39 @@
 import pymunk
 import math
+import utils
 
 class humanoid:
     def __init__(self, base, space):
+        self.target = None
+        self.space = space
+
         self.bodyNode = base.loader.loadModel("models/Capsule.stl")
         self.bodyNode.reparentTo(base.render)
 
         poly = self.makePoly(0.36, 1.74, 10)
 
-        #for pt in poly:
-        #    print(pt)
-
         self.body = pymunk.Body(10, 100)
         self.body.position = 50, 30
-        #shape = pymunk.Circle(body, 10, (0, 0))
         shape = pymunk.Poly(self.body, poly)
-        #shape = pymunk.Poly.create_box(body, (100*scale, 55*scale))
         shape.friction = 0.5
+        shape.filter = pymunk.ShapeFilter(categories=utils.CATEGORY_HUMANOID)
         space.add(self.body, shape)
 
     def update(self,dt):
+        self.body.angle = 0
         self.pos = self.body.position
         rot = self.body.angle
         self.bodyNode.setPos(self.pos.x,200,self.pos.y)
         self.bodyNode.setHpr(0,0,-(rot * 180/3.14))
+
+        if self.target:
+            targetPos = self.target.pos
+            filter = pymunk.ShapeFilter(mask=utils.CATEGORY_PLAYER)
+            result = self.space.point_query_nearest(self.pos, 5, filter)
+            
+            #if result != None:
+                #print(result)
+               #print(result[0].point == targetPos)
 
     def makePoly(self, body_w, body_h, subdivisions):
         body_w = 0.36

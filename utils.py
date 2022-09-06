@@ -22,3 +22,11 @@ def not_zero(x: float) -> bool:
 # Smoothing rate dictates the proportion of source remaining after one second
 def damp(source: float, smoothing: float, dt: float) -> float:
     return source * math.pow(smoothing, dt)
+
+
+CATEGORY_WALL = 0x01
+CATEGORY_PLAYER = 0x02
+CATEGORY_HUMANOID = 0x04
+CATEGORY_ENEMY = 0x08
+CATEGORY_PLAYER_PROJECTILE = 0x10
+CATEGORY_ENEMY_PROJECTILE = 0x20

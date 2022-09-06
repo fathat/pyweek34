@@ -1,7 +1,7 @@
 import pymunk
 import input
 from enum import Enum
-from utils import not_zero, radians_to_degrees, damp
+from utils import not_zero, radians_to_degrees, damp, CATEGORY_PLAYER
 
 class Direction(Enum):
     LEFT = -1
@@ -28,6 +28,7 @@ class Chopper:
         shape = pymunk.Poly(self.body, [(-width*scale, -height*scale), (width*scale, -height*scale), (width*scale, height*scale), (-width*scale, height*scale)])
         # shape = pymunk.Poly.create_box(body, (100*scale, 55*scale))
         shape.friction = 0.5
+        shape.filter = pymunk.ShapeFilter(categories=CATEGORY_PLAYER)
         space.add(self.body, shape)
 
     def update(self, dt: float):
