@@ -13,7 +13,7 @@ class humanoid:
         poly = self.makePoly(0.36, 1.74, 10)
 
         self.body = pymunk.Body(10, 100)
-        self.body.position = 50, 30
+        self.body.position = 70, 30
         shape = pymunk.Poly(self.body, poly)
         shape.friction = 0.5
         shape.filter = pymunk.ShapeFilter(categories=utils.CATEGORY_HUMANOID)
@@ -22,22 +22,19 @@ class humanoid:
     def update(self,dt):
         self.body.angle = 0
         self.pos = self.body.position
-        rot = self.body.angle
+
         self.bodyNode.setPos(self.pos.x,0,self.pos.y)
-        self.bodyNode.setHpr(0,0,-(rot * 180/3.14))
+        self.bodyNode.setHpr(0,0,-utils.radians_to_degrees(self.body.angle))
 
         if self.target:
-            targetPos = self.target.pos
             filter = pymunk.ShapeFilter(mask=utils.CATEGORY_PLAYER)
-            result = self.space.point_query_nearest(self.pos, 5, filter)
+            result = self.space.point_query_nearest(self.pos, 50, filter)
             
-            #if result != None:
-                #print(result)
-               #print(result[0].point == targetPos)
+            if result != None:
+                force = 100 * (result.point - self.pos).normalized()
+                self.body.apply_force_at_local_point((force.x, 0), (0, 0))
 
     def makePoly(self, body_w, body_h, subdivisions):
-        body_w = 0.36
-        body_h = 1.74
         body_radius = body_w/2
         shoulder = body_h - body_w/2
         waist = body_w
