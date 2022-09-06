@@ -77,13 +77,10 @@ def create_segments(transformed_triangle, physics_plane, space, render):
 
 def add_node_path_as_collider(node, node_path, space, render=None):
     physics_plane = Plane(LVector3f(0, -1, 0), LPoint3f(0, 0, 0))
-
-    print(node_path.ls())
-    mat4 = node_path.getTransform().getMat()
     geom_node_collection = node_path.findAllMatches('**/+GeomNode')
     for geom_node_path in geom_node_collection:
         geom_node = geom_node_path.node()
-        mat4 = geom_node_path.parent.getTransform().getMat()
+        mat4 = geom_node_path.getNetPrevTransform().getMat()
         triangles = process_geom_node(geom_node)
         for triangle in triangles:
             # triangle is in local space, so bring it to world space of node_path
