@@ -6,7 +6,7 @@ class humanoid:
         self.bodyNode = base.loader.loadModel("models/Capsule.stl")
         self.bodyNode.reparentTo(base.render)
 
-        poly = self.MakePoly(0.36, 1.74, 10)
+        poly = self.makePoly(0.36, 1.74, 10)
 
         #for pt in poly:
         #    print(pt)
@@ -25,7 +25,7 @@ class humanoid:
         self.bodyNode.setPos(self.pos.x,200,self.pos.y)
         self.bodyNode.setHpr(0,0,-(rot * 180/3.14))
 
-    def MakePoly(self, body_w, body_h, subdivisions):
+    def makePoly(self, body_w, body_h, subdivisions):
         body_w = 0.36
         body_h = 1.74
         body_radius = body_w/2
