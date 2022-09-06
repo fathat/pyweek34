@@ -32,7 +32,7 @@ class scene:
     def update(self, dt):
         self.pymunk_timer += dt
 
-        if self.pymunk_timer >= pymunk_step:
+        while self.pymunk_timer >= pymunk_step:
             self.pymunk_timer -= pymunk_step
             self.space.step(pymunk_step)
             self.chopper.update(pymunk_step)
