@@ -1,6 +1,6 @@
 from panda3d.core import PointLight, LVector3
 import pymunk
-import input
+from input import InputManager
 from enum import Enum
 from utils import not_zero, radians_to_degrees, damp, move_towards, CATEGORY_PLAYER
 
@@ -52,10 +52,16 @@ class Chopper:
     def velocity(self) -> float: return self.body.velocity.length
 
     def update(self, dt: float):
-        input = self.input
+        input: InputManager = self.input
 
         if not_zero(input.throttle()):
             self.body.apply_force_at_local_point((0, 200 * input.throttle()), (0, 0))
+
+        if input.is_booster_rocket_pressed():
+            self.body.apply_force_at_local_point((self.direction.value * 200, 0), (0, 0))
+        
+        if input.is_reverse_booster_rocket_pressed():
+            self.body.apply_force_at_local_point((-self.direction.value * 200, 0), (0, 0))
 
         if input.is_face_left_pressed():
             self.direction = Direction.LEFT

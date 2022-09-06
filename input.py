@@ -11,6 +11,8 @@ class InputManager:
     face_left_pressed = False
     face_right_pressed = False
 
+    boost_pressed = False
+    reverse_boost_pressed = False
 
     def __init__(self, app):
 
@@ -34,6 +36,14 @@ class InputManager:
         app.accept('a', self.on_pitch_ccw, [True])
         app.accept('d-up', self.on_pitch_cw, [False])
         app.accept('d', self.on_pitch_cw, [True])
+        app.accept('lshift-up', self.on_boost_pressed, [False])
+        app.accept('lshift', self.on_boost_pressed, [True])
+        app.accept('lcontrol-up', self.on_reverse_boost_pressed, [False])
+        app.accept('lcontrol', self.on_reverse_boost_pressed, [True])
+        app.accept("gamepad-face_a", self.on_boost_pressed, [True])
+        app.accept("gamepad-face_a-up", self.on_boost_pressed, [False])
+        app.accept("gamepad-face_b", self.on_reverse_boost_pressed, [True])
+        app.accept("gamepad-face_b-up", self.on_reverse_boost_pressed, [False])
         app.accept('arrow_left-up', self.on_face_left, [False])
         app.accept('arrow_left', self.on_face_left, [True])
         app.accept('arrow_right-up', self.on_face_right, [False])
@@ -86,6 +96,14 @@ class InputManager:
             return right_x.value > 0.2
         return False
 
+    def is_booster_rocket_pressed(self) -> bool:
+        if self.boost_pressed:
+            return True
+        return False
+
+    def is_reverse_booster_rocket_pressed(self) -> bool:
+        return self.reverse_boost_pressed
+
     def throttle(self) -> float:
         """
         :return: returns a value between 0.0 and 1.0 (1.0 is full throttle)
@@ -119,8 +137,17 @@ class InputManager:
         return 0.0
 
 
+    def on_boost_pressed(self, down):
+        self.boost_pressed = down
+
+
+    def on_reverse_boost_pressed(self, down):
+        self.reverse_boost_pressed = down
+
+
     def on_throttle(self, down):
         self.upPressed = down
+
 
     def on_dethrottle(self, down):
         self.downPressed = down
