@@ -3,6 +3,7 @@ import chopper
 import humanoid
 import pymunk
 from pymunk import Vec2d
+import utils
 
 pymunk_step = 1.0/120.0
 
@@ -24,10 +25,12 @@ class Scene:
 
         shape = pymunk.Segment(self.space.static_body, Vec2d(-100, 10), Vec2d(100, -10), 0.0)
         shape.friction = 1.0
+        shape.filter = pymunk.ShapeFilter(categories=utils.CATEGORY_WALL)
         self.space.add(shape)
 
         self.chopper = chopper.Chopper(app, self.space)
         self.human = humanoid.humanoid(app, self.space)
+        self.human.target = self.chopper
 
     def update(self, dt):
         self.pymunk_timer += dt

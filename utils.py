@@ -24,6 +24,14 @@ def damp(source: float, smoothing: float, dt: float) -> float:
     return source * math.pow(smoothing, dt)
 
 
+CATEGORY_WALL = 0x01
+CATEGORY_PLAYER = 0x02
+CATEGORY_HUMANOID = 0x04
+CATEGORY_ENEMY = 0x08
+CATEGORY_PLAYER_PROJECTILE = 0x10
+CATEGORY_ENEMY_PROJECTILE = 0x20
+
+
 def move_towards(source: float, target: float, rate: float, dt: float) -> float:
     if float_eq(source, target): return target
     
