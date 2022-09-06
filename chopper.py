@@ -16,6 +16,7 @@ class Chopper:
     def __init__(self, base, space):
         width, height, scale = self.width, self.height, self.scale
 
+        self.score = 0
         self.heading = -90
         self.pitch = 0.0
         self.bodyNode = base.loader.loadModel("art/space-chopper/space-chopper.glb")
@@ -32,6 +33,8 @@ class Chopper:
         # shape = pymunk.Poly.create_box(body, (100*scale, 55*scale))
         shape.friction = 0.5
         shape.filter = pymunk.ShapeFilter(categories=CATEGORY_PLAYER)
+        shape.collision_type = CATEGORY_PLAYER
+        shape.data = self
         space.add(self.body, shape)
 
     def update(self, dt: float):
@@ -58,3 +61,7 @@ class Chopper:
         self.heading = move_towards(self.heading, 90 * -self.direction.value, 360 * 5, dt)
         self.pitch = move_towards(self.pitch, radians_to_degrees(rot) * self.direction.value, 360 * 5, dt)
         self.bodyNode.setHpr(self.heading, self.pitch, 0)
+
+    def pickup(self, human):
+        human.destroy()
+        self.score += 1
