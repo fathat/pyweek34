@@ -35,8 +35,6 @@ class humanoid:
                 self.body.apply_force_at_local_point((force.x, 0), (0, 0))
 
     def makePoly(self, body_w, body_h, subdivisions):
-        body_w = 0.36
-        body_h = 1.74
         body_radius = body_w/2
         shoulder = body_h - body_w/2
         waist = body_w
