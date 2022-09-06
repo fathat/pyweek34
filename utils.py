@@ -17,3 +17,8 @@ def float_eq(x: float, y: float) -> bool:
 
 def not_zero(x: float) -> bool:
     return math.fabs(x) > 0.0
+
+
+# Smoothing rate dictates the proportion of source remaining after one second
+def damp(source: float, smoothing: float, dt: float) -> float:
+    return source * math.pow(smoothing, dt)

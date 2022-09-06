@@ -4,6 +4,8 @@ from panda3d.core import *
 from direct.task import Task
 from direct.task.TaskManagerGlobal import taskMgr
 from scene import Scene
+from gltf.loader import GltfLoader
+
 import input
 
 load_prc_file_data("", """
@@ -16,9 +18,11 @@ load_prc_file_data("", """
 class RedPlanetApp(ShowBase):
     def __init__(self):
         ShowBase.__init__(self)
+        self.gltfLoader = GltfLoader()
         self.enableParticles()
         self.disableMouse()
         input.init(self)
+        self.camera.setPos(0, -50, 0)
         self.scene = Scene(self)
         self.clock = ClockObject.getGlobalClock()
         self.updateTask = taskMgr.add(self.update_task, "update_task")
