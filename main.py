@@ -22,8 +22,18 @@ input.init(base)
 aScene = scene.scene(base)
 clock = ClockObject.getGlobalClock()
 
+timer = 0
+frameCount = 0
 
 while True:
+    timer += clock.dt
+    frameCount += 1
+
+    if timer >= 1.0:
+        print("fps avg=" + str(frameCount/timer))
+        timer = 0
+        frameCount = 0
+
     aScene.update(clock.dt)
     
     base.taskMgr.step()
