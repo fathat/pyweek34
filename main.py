@@ -24,13 +24,29 @@ load_prc_file_data("", """
 class RedPlanetApp(ShowBase):
     def __init__(self):
         ShowBase.__init__(self)
+        self.setBackgroundColor(0.0, 0.6, 0.8)
         self.gltfLoader = GltfLoader()
-        #simplepbr.init()
+        
+        ambientLight = AmbientLight("ambient light")
+        ambientLight.setColor(Vec4(0.2, 0.2, 0.2, 1))
+        self.ambientLightNodePath = self.render.attachNewNode(ambientLight)
+        self.render.setLight(self.ambientLightNodePath)
         self.enableParticles()
         self.disableMouse()
         input.init(self)
+
+        self.perPixelEnabled = True
+        self.shadowsEnabled = True
+        self.camLens.set_fov(60)
+        self.camLens.set_near_far(1, 10000)
         self.camera.setPos(0, -50, 0)
-        self.scene = Scene(self)
+        self.scene = Scene(self, 'debugscene')
+        
+        ## We need to use setShaderAuto or simplepbr eventually, but setShaderAut
+        ## doesn't seem to be working with lights properly for whatever reason..
+        #simplepbr.init(enable_shadows=True, enable_fog=True, use_normal_maps=True)
+        #self.render.setShaderAuto()
+        #self.render.setLight(self.scene.sunNP)
         self.clock = ClockObject.getGlobalClock()
         self.updateTask = taskMgr.add(self.update_task, "update_task")
 

@@ -6,6 +6,7 @@ from pymunk import Vec2d
 import utils
 import distributorOfPain
 from scene_colliders import add_node_path_as_collider
+from scene_definition import SceneDefinition
 
 pymunk_step = 1.0/120.0
 
@@ -15,26 +16,38 @@ class Scene:
     space: pymunk.Space = None
     world: ModelNode
 
-    def __init__(self, app):
+    def __init__(self, app, name):
+
+        self.scene_definition = SceneDefinition(name)
         self.app = app
         self.space = pymunk.Space()
-        self.space.gravity = (0.0, -9.8)
+        self.space.gravity = (0.0, self.scene_definition.gravity)
         distributorOfPain.init(self.space)
         self.pymunk_timer = 0.0
        
-        self.world = app.loader.loadModel('scenes/debugscene/debugscene.glb')
+        color = tuple(self.scene_definition.background_color)
+        expfog = Fog("Fog")
+        expfog.setExpDensity(self.scene_definition.fog_density)
+        expfog.setColor(*color)
+        app.setBackgroundColor(*color)
+
+        self.world = app.loader.loadModel(self.scene_definition.world_mesh)
         self.worldNP = NodePath(self.world)
         self.worldNP.reparentTo(self.app.render)
-
+        self.worldNP.setFog(expfog)
+        
         self.sun = DirectionalLight('Sun')
+        self.sun.setColor(LVector3(*tuple(self.scene_definition.sun_color)))
+        self.sun.setDirection(LVector3(0, 1, -1).normalized())
+        self.sun.setShadowCaster(True, 1024, 1024)
         self.sunNP = app.render.attachNewNode(self.sun)
-        self.sunNP.setHpr(0, -60, 0)       
-        self.worldNP.setLight(self.sunNP)
+        self.app.render.setLight(self.sunNP)       
 
         add_node_path_as_collider(self.world, self.worldNP, self.space, app.render)
 
         self.chopper = chopper.Chopper(app, self)
 
+        print(app.render.ls())  
         self.npcs = []
         x = -99
         for i in range(0, 10):

@@ -1,3 +1,4 @@
+from panda3d.core import PointLight, LVector3
 import pymunk
 import input
 from enum import Enum
@@ -27,14 +28,21 @@ class Chopper:
         self.bodyNode.reparentTo(app.render)
         self.bodyNode.setLight(scene.sunNP)
 
+        self.light = PointLight("ChopperLight")
+        self.light.setAttenuation(LVector3(1, 0, 1))
+        self.light.setMaxDistance(60)
+        self.lightNP = self.bodyNode.attachNewNode(self.light)
+        self.lightNP.reparentTo(self.bodyNode)
+        
+        app.render.setLight(self.lightNP)
+        
+
         #self.roterNode = base.loader.loadModel("models/Roter.stl")
         #self.roterNode.reparentTo(self.bodyNode)
 
         self.body = pymunk.Body(5, 100)
         self.body.position = 0, 30
-        # shape = pymunk.Circle(body, 10, (0, 0))
         shape = pymunk.Poly(self.body, [(-width*scale, -height*scale), (width*scale, -height*scale), (width*scale, height*scale), (-width*scale, height*scale)])
-        # shape = pymunk.Poly.create_box(body, (100*scale, 55*scale))
         shape.friction = 0.5
         shape.filter = pymunk.ShapeFilter(categories=CATEGORY_PLAYER)
         shape.collision_type = CATEGORY_PLAYER

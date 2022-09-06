@@ -1,7 +1,7 @@
 import math
 from panda3d.core import Plane, LPoint3f
 
-EPSILON = 0.001
+EPSILON = 0.0001
 
 CATEGORY_WALL = 0x01
 CATEGORY_PLAYER = 0x02
@@ -21,6 +21,10 @@ def radians_to_degrees(deg: float):
 
 def float_eq(x: float, y: float) -> bool:
     return math.fabs(x - y) < EPSILON
+
+
+def almost_zero(x: float) -> bool:
+    return math.fabs(x) < EPSILON
 
 
 def not_zero(x: float) -> bool:
@@ -60,6 +64,10 @@ def segment_plane_intersection(p1: LPoint3f, p2: LPoint3f, plane: Plane) -> list
         return points
 
     if d1*d2 > EPSILON: return []
+
+    s = d1 - d2
+    if almost_zero(s):
+        return points
 
     t = d1 / (d1 - d2)
     intersection_point = p1 + (p2 - p1) * t
