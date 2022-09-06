@@ -71,4 +71,5 @@ class Scene:
                 else:
                     self.npcs[i].update(pymunk_step)
             
-            self.app.camera.setPos(self.chopper.pos.x, -100, self.chopper.pos.y)
+            self.app.camera.setPos(self.chopper.pos.x, -80, self.chopper.pos.y + 15)
+            self.app.camera.lookAt(self.chopper.pos.x, 0, self.chopper.pos.y)

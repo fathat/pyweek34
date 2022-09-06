@@ -56,7 +56,9 @@ def process_vertex_data(vdata):
 
 def create_segments(transformed_triangle, physics_plane, space, render):
     segments = utils.triangle_plane_intersection(transformed_triangle, physics_plane)
-    if segments and len(segments) == 2: 
+    if segments and len(segments) > 1: 
+        if len(segments) > 2:
+            print("more than two segments, there may be issues")
         for i in range(len(segments)-1):
             p1 = segments[i].getXz()
             p2 = segments[i+1].getXz()

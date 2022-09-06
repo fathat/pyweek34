@@ -89,7 +89,7 @@ def triangle_plane_intersection(tri: list[LPoint3f], plane: Plane) -> list[LPoin
 def remove_duplicate_points(points: list[LPoint3f]) -> list[LPoint3f]:
     final_list = []
     for p in points:
-        is_dup = any(x for x in final_list if p.almostEqual(x))
+        is_dup = any(x for x in final_list if p.almostEqual(x, EPSILON))
         if not is_dup:
             final_list.append(p)
     return final_list

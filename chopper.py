@@ -19,7 +19,7 @@ class Chopper:
     def __init__(self, app, scene):
         width, height, scale = self.width, self.height, self.scale
         space = scene.space
-
+        self.input = app.input
         self.score = 0
         self.heading = -90
         self.pitch = 0.0
@@ -50,6 +50,8 @@ class Chopper:
         space.add(self.body, shape)
 
     def update(self, dt: float):
+        input = self.input
+
         if not_zero(input.throttle()):
             self.body.apply_force_at_local_point((0, 200 * input.throttle()), (0, 0))
 
@@ -59,10 +61,12 @@ class Chopper:
             self.direction = Direction.RIGHT
 
         if not_zero(input.pitch_axis()):
+            self.body.apply_force_at_world_point((10 * input.pitch_axis(), 0), (self.body.position.x, self.body.position.y))
             self.body.apply_force_at_local_point((0, 200 * input.pitch_axis()), (-self.width, 0))
             self.body.apply_force_at_local_point((0, -200 * input.pitch_axis()), (self.width, 0))
 
 
+        self.body.velocity = damp(self.body.velocity, .95, dt)
         self.body.angular_velocity = damp(self.body.angular_velocity, 0.15, dt)
 
         self.pos = self.body.position
