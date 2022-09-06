@@ -1,6 +1,6 @@
 import pymunk
 import input
-from utils import not_zero
+from utils import not_zero, radians_to_degrees
 
 
 class Chopper:
@@ -12,7 +12,6 @@ class Chopper:
 
         self.roterNode = base.loader.loadModel("models/Roter.stl")
         self.roterNode.reparentTo(self.bodyNode)
-
 
         self.body = pymunk.Body(10, 100)
         self.body.position = 0, 30
@@ -32,11 +31,9 @@ class Chopper:
 
         # FIXME: this isn't really correct, needs to work with dt or we need a fixed frame rate
         self.body.angular_velocity *= 0.95
-        self.body.velocity *= 0.99
 
         self.pos = self.body.position
         rot = self.body.angle
         self.bodyNode.setPos(self.pos.x,200,self.pos.y)
-        self.bodyNode.setHpr(0, 0, -(rot * 180/3.14))
-
+        self.bodyNode.setHpr(0, 0, -(radians_to_degrees(rot)))
         self.roterNode.setHpr(self.roterNode, 1800 * dt, 0, 0)
