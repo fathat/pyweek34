@@ -22,7 +22,7 @@ class scene:
         shape.friction = 1.0
         self.space.add(shape)
 
-        self.chopper = chopper.chopper(base, self.space)
+        self.chopper = chopper.Chopper(base, self.space)
 
     def update(self, dt):
         self.space.step(dt)
