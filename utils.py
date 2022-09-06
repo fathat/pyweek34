@@ -31,6 +31,11 @@ def not_zero(x: float) -> bool:
     return math.fabs(x) > 0.0
 
 
+def clamp(x, minx, maxx):
+    if x > maxx: return maxx
+    if x < minx: return minx
+    return x
+
 # Smoothing rate dictates the proportion of source remaining after one second
 def damp(source: float, smoothing: float, dt: float) -> float:
     return source * math.pow(smoothing, dt)

@@ -49,6 +49,8 @@ class Chopper:
         shape.data = self
         space.add(self.body, shape)
 
+    def velocity(self) -> float: return self.body.velocity.length
+
     def update(self, dt: float):
         input = self.input
 
@@ -68,6 +70,7 @@ class Chopper:
 
         self.body.velocity = damp(self.body.velocity, .95, dt)
         self.body.angular_velocity = damp(self.body.angular_velocity, 0.15, dt)
+                
 
         self.pos = self.body.position
         rot = self.body.angle

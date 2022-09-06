@@ -15,6 +15,7 @@ class Scene:
     
     space: pymunk.Space = None
     world: ModelNode
+    camera_fov: float = 35
 
     def __init__(self, app, name):
 
@@ -24,6 +25,7 @@ class Scene:
         self.space.gravity = (0.0, self.scene_definition.gravity)
         distributorOfPain.init(self.space)
         self.pymunk_timer = 0.0
+        self.camera_fov = 35
        
         color = tuple(self.scene_definition.background_color)
         expfog = Fog("Fog")
@@ -73,3 +75,8 @@ class Scene:
             
             self.app.camera.setPos(self.chopper.pos.x, -80, self.chopper.pos.y + 15)
             self.app.camera.lookAt(self.chopper.pos.x, 0, self.chopper.pos.y)
+
+            # fov_target = 60 + utils.clamp((self.chopper.velocity() / 5.0) * 0.5 + self.chopper.body.angular_velocity.length , 0.0, 1.0) * 25
+            # self.camera_fov = utils.move_towards(self.camera_fov, fov_target, 5, dt)
+
+            # self.app.camLens.set_fov(self.camera_fov)
