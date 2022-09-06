@@ -11,6 +11,10 @@ pymunk_step = 1.0/120.0
 
 
 class Scene:
+    
+    space: pymunk.Space = None
+    world: ModelNode
+
     def __init__(self, app):
         self.app = app
         self.space = pymunk.Space()
@@ -22,14 +26,14 @@ class Scene:
         self.worldNP = NodePath(self.world)
         self.worldNP.reparentTo(self.app.render)
 
-        dlight = DirectionalLight('Sun')
-        dlnp = app.render.attachNewNode(dlight)
-        dlnp.setHpr(0, -60, 0)       
-        self.worldNP.setLight(dlnp)
+        self.sun = DirectionalLight('Sun')
+        self.sunNP = app.render.attachNewNode(self.sun)
+        self.sunNP.setHpr(0, -60, 0)       
+        self.worldNP.setLight(self.sunNP)
 
         add_node_path_as_collider(self.world, self.worldNP, self.space, app.render)
 
-        self.chopper = chopper.Chopper(app, self.space)
+        self.chopper = chopper.Chopper(app, self)
 
         self.npcs = []
         x = -99

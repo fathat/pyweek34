@@ -15,15 +15,17 @@ class Chopper:
     scale: float = 1.0
     direction: Direction = Direction.RIGHT
 
-    def __init__(self, base, space):
+    def __init__(self, app, scene):
         width, height, scale = self.width, self.height, self.scale
+        space = scene.space
 
         self.score = 0
         self.heading = -90
         self.pitch = 0.0
-        self.bodyNode = base.loader.loadModel("art/space-chopper/space-chopper.glb")
+        self.bodyNode = app.loader.loadModel("art/space-chopper/space-chopper.glb")
         self.bodyNode.setScale(scale, scale, scale)
-        self.bodyNode.reparentTo(base.render)
+        self.bodyNode.reparentTo(app.render)
+        self.bodyNode.setLight(scene.sunNP)
 
         #self.roterNode = base.loader.loadModel("models/Roter.stl")
         #self.roterNode.reparentTo(self.bodyNode)
