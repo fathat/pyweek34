@@ -4,9 +4,9 @@ import humanoid
 import pymunk
 from pymunk import Vec2d
 
-pymunk_step = 1/60
+pymunk_step = 1.0/120.0
 
-class scene:
+class Scene:
     def __init__(self, base):
         self.base = base
         self.space = pymunk.Space()

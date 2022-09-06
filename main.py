@@ -3,12 +3,14 @@ from panda3d.physics import *
 from panda3d.core import *
 from direct.task import Task
 from direct.task.TaskManagerGlobal import taskMgr
-import scene
+from scene import Scene
 import input
 
 load_prc_file_data("", """
     show-frame-rate-meter 1
     sync-video 1
+    win-size 1280 720
+    window-title Space Chopper
 """)
 
 class RedPlanetApp(ShowBase):
@@ -17,14 +19,12 @@ class RedPlanetApp(ShowBase):
         self.enableParticles()
         self.disableMouse()
         input.init(self)
-        self.scene = scene.scene(self)
+        self.scene = Scene(self)
         self.clock = ClockObject.getGlobalClock()
         self.updateTask = taskMgr.add(self.update_task, "update_task")
 
     def update_task(self, task: Task):
-        if self.clock.dt > 1.0/59.0:
-            print(self.clock.dt, 1.0/60.0)
-        self.scene.update(1.0/60.0)
+        self.scene.update(self.clock.dt)
         return Task.cont
 
 if __name__ == '__main__':
