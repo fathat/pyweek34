@@ -7,6 +7,7 @@ from scene import Scene
 from gltf.loader import GltfLoader
 
 import input
+import simplepbr
 
 load_prc_file_data("", """
     show-frame-rate-meter 1
@@ -19,6 +20,7 @@ class RedPlanetApp(ShowBase):
     def __init__(self):
         ShowBase.__init__(self)
         self.gltfLoader = GltfLoader()
+        #simplepbr.init()
         self.enableParticles()
         self.disableMouse()
         input.init(self)

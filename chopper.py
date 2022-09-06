@@ -1,7 +1,7 @@
 import pymunk
 import input
 from enum import Enum
-from utils import not_zero, radians_to_degrees, damp
+from utils import not_zero, radians_to_degrees, damp, move_towards
 
 class Direction(Enum):
     LEFT = -1
@@ -15,6 +15,9 @@ class Chopper:
 
     def __init__(self, base, space):
         width, height, scale = self.width, self.height, self.scale
+
+        self.heading = -90
+        self.pitch = 0.0
         self.bodyNode = base.loader.loadModel("art/space-chopper/space-chopper.glb")
         self.bodyNode.setScale(scale, scale, scale)
         self.bodyNode.reparentTo(base.render)
@@ -34,10 +37,15 @@ class Chopper:
         if not_zero(input.throttle()):
             self.body.apply_force_at_local_point((0, 200 * input.throttle()), (0, 0))
 
+        if input.is_face_left_pressed():
+            self.direction = Direction.LEFT
+        elif input.is_face_right_pressed():
+            self.direction = Direction.RIGHT
+
         if not_zero(input.pitch_axis()):
-            self.direction = Direction.LEFT if input.pitch_axis() < 0 else Direction.RIGHT
-            self.body.apply_force_at_local_point((0, 200), (self.width * -self.direction.value, 0))
-            self.body.apply_force_at_local_point((0, -200), (self.width * self.direction.value, 0))
+            self.body.apply_force_at_local_point((0, 200 * input.pitch_axis()), (-self.width, 0))
+            self.body.apply_force_at_local_point((0, -200 * input.pitch_axis()), (self.width, 0))
+
 
         self.body.angular_velocity = damp(self.body.angular_velocity, 0.15, dt)
 
@@ -45,5 +53,12 @@ class Chopper:
         rot = self.body.angle
         
         self.bodyNode.setPos(self.pos.x, 0, self.pos.y)
-        self.bodyNode.setHpr(90, -(radians_to_degrees(rot)), 0)
+
+        self.heading = move_towards(self.heading, 90 * -self.direction.value, 360 * 5, dt)
+        self.pitch = move_towards(self.pitch, radians_to_degrees(rot) * self.direction.value, 360 * 5, dt)
+        self.bodyNode.setHpr(self.heading, self.pitch, 0)
+        # if self.direction == Direction.LEFT:
+        #     self.bodyNode.setHpr(90, -(radians_to_degrees(rot)), 0)
+        # if self.direction == Direction.RIGHT:
+        #     self.bodyNode.setHpr(-90, (radians_to_degrees(rot)), 0)
         #self.roterNode.setHpr(self.roterNode, 1800 * dt, 0, 0)

@@ -22,7 +22,7 @@ class humanoid:
     def update(self,dt):
         self.pos = self.body.position
         rot = self.body.angle
-        self.bodyNode.setPos(self.pos.x,200,self.pos.y)
+        self.bodyNode.setPos(self.pos.x,0,self.pos.y)
         self.bodyNode.setHpr(0,0,-(rot * 180/3.14))
 
     def makePoly(self, body_w, body_h, subdivisions):

@@ -22,3 +22,13 @@ def not_zero(x: float) -> bool:
 # Smoothing rate dictates the proportion of source remaining after one second
 def damp(source: float, smoothing: float, dt: float) -> float:
     return source * math.pow(smoothing, dt)
+
+
+def move_towards(source: float, target: float, rate: float, dt: float) -> float:
+    if float_eq(source, target): return target
+    
+    if source < target:
+        return min(source + rate * dt, target)
+    else:
+        return max(source - rate * dt, target)
+        
