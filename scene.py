@@ -5,8 +5,10 @@ import pymunk
 from pymunk import Vec2d
 import utils
 import distributorOfPain
+from scene_colliders import add_node_path_as_collider
 
 pymunk_step = 1.0/120.0
+
 
 class Scene:
     def __init__(self, app):
@@ -15,6 +17,21 @@ class Scene:
         self.space.gravity = (0.0, -9.8)
         distributorOfPain.init(self.space)
         self.pymunk_timer = 0.0
+
+        self.box = app.loader.loadModel('worldmesh/box.glb')
+        self.box2 = app.loader.loadModel('worldmesh/box.glb')
+        
+        self.boxNP = NodePath(self.box)
+        self.boxNP.reparentTo(self.app.render)
+        self.boxNP.setPos(15, 0, 25)
+        self.boxNP.setHpr(0, 0, 45)
+        
+        self.boxNP2 = NodePath(self.box2)
+        self.boxNP2.reparentTo(self.app.render)
+        self.boxNP2.setPos(0, 25, 15)
+        self.boxNP2.setHpr(0, 0, 15)
+
+        add_node_path_as_collider(self.box, self.boxNP, self.space, app.render)
 
         lines = LineSegs()
         lines.setColor(1, 0, 0, 1)

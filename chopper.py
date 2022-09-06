@@ -3,9 +3,11 @@ import input
 from enum import Enum
 from utils import not_zero, radians_to_degrees, damp, move_towards, CATEGORY_PLAYER
 
+
 class Direction(Enum):
     LEFT = -1
     RIGHT = 1
+
 
 class Chopper:
     width: float = 3.0
