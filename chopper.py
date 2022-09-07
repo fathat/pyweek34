@@ -2,8 +2,8 @@ from panda3d.core import PointLight, LVector3, LensNode, PerspectiveLens, Sample
 import pymunk
 from input import InputManager
 from enum import Enum
-from utils import not_zero, radians_to_degrees, damp, move_towards, slerp
-from masks import CATEGORY_PLAYER
+from utils import clamp, not_zero, radians_to_degrees, damp, move_towards, slerp
+from masks import CATEGORY_PLAYER, CATEGORY_WALL
 import math
 
 
@@ -24,10 +24,14 @@ class Chopper:
     height: float = 1.5
     scale: float = 1.0
     direction: Direction = Direction.RIGHT
+    scene: "scene.Scene"
+    space: pymunk.Space
 
-    def __init__(self, app, scene):
+    def __init__(self, app, scene: "scene.Scene"):
         width, height, scale = self.width, self.height, self.scale
         space = scene.space
+        self.scene = scene
+        self.space = space
         self.input = app.input
         self.score = 0
         self.flip_heading_t = 0
@@ -107,8 +111,8 @@ class Chopper:
             self.body.apply_force_at_local_point((0, 200 * im.pitch_axis()), (-self.width, 0))
             self.body.apply_force_at_local_point((0, -200 * im.pitch_axis()), (self.width, 0))
 
-
-        self.body.velocity = damp(self.body.velocity, .95, dt)
+        damping_rate = 1.0 - clamp(self.velocity() / 100, 0, 1)
+        self.body.velocity = damp(self.body.velocity, damping_rate, dt)
         self.body.angular_velocity = damp(self.body.angular_velocity, 0.15, dt)
                 
 
@@ -138,6 +142,8 @@ class Chopper:
         else:
             self.bodyNode.setHpr(LVector3(90 * -self.direction.value, radians_to_degrees(rot) * self.direction.value, 0))
 
+    def distance_to_ground(self):
+        self.space.segment_query((self.body.position.x, self.body.position.y), (self.body.position.x, self.body.position.y - 50), self.width, CATEGORY_WALL)
 
     def pickup(self, human):
         human.destroy()

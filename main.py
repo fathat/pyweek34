@@ -1,6 +1,7 @@
 from direct.showbase.ShowBase import ShowBase
 from panda3d.physics import *
 from panda3d.core import *
+from direct.gui.DirectGui import OnscreenText
 from direct.actor import Actor
 from direct.task import Task
 from direct.task.TaskManagerGlobal import taskMgr
@@ -45,6 +46,7 @@ class RedPlanetApp(ShowBase):
 
         
         self.gltfLoader = GltfLoader()
+        self.font = self.loader.loadFont("art/fonts/bedstead/bedstead.otf")
         
         ambientLight = AmbientLight("ambient light")
         ambientLight.setColor(Vec4(0.2, 0.2, 0.2, 1))
@@ -65,12 +67,21 @@ class RedPlanetApp(ShowBase):
         materials = self.render.findAllMaterials()
         print(materials)
 
+        self.altText = OnscreenText(text="Altitude: ?", font=self.font, style=2, fg=(1, 1, 1, 1), bg=(0, 0, 0, 0.5), scale=.05,
+                        shadow=(0, 0, 0, 1), parent=self.a2dBottomLeft,
+                        pos=(0.05, 0.05), align=TextNode.ALeft)
+        self.speedText = OnscreenText(text="Speed: ?", font=self.font, style=2, fg=(1, 1, 1, 1), bg=(0, 0, 0, 0.5), scale=.05,
+                        shadow=(0, 0, 0, 1), parent=self.a2dBottomLeft,
+                        pos=(0.05, 0.11), align=TextNode.ALeft)
+
         self.clock = ClockObject.getGlobalClock()
         self.updateTask = taskMgr.add(self.update_task, "update_task")
 
 
     def update_task(self, task: Task):
         self.scene.update(self.clock.dt)
+        self.altText.setText("Altitude: " + str(int(self.scene.chopper.pos.y)) + "m")
+        self.speedText.setText(f"Speed: {int(self.scene.chopper.velocity())}")
         return Task.cont
 
 if __name__ == '__main__':
