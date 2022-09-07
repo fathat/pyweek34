@@ -89,7 +89,7 @@ class InputManager:
         return False
 
     def is_face_right_pressed(self) -> bool: 
-        if self.face_left_pressed:
+        if self.face_right_pressed:
             return True
         if self.gamepad:
             right_x = self.gamepad.findAxis(InputDevice.Axis.right_x)

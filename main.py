@@ -64,9 +64,6 @@ class RedPlanetApp(ShowBase):
         self.pandaModel.setPos(9, 0, 0)
         self.pandaModel.setScale(0.01)
 
-        ## We need to use setShaderAuto or simplepbr eventually, but setShaderAut
-        ## doesn't seem to be working with lights properly for whatever reason..
-        #simplepbr.init(enable_shadows=True, enable_fog=True, use_normal_maps=True)
         self.render.setShaderAuto()
         materials = self.render.findAllMaterials()
         print(materials)

@@ -42,7 +42,6 @@ class Scene:
         self.sun = DirectionalLight('Sun')
         self.sun.setColor(LVector3(*tuple(self.scene_definition.sun_color))* 0.5) 
         self.sun.setShadowCaster(True, 4096, 4096)
-        self.sun.showFrustum()
         self.sun.getLens().setFilmSize(400, 200)
         self.sun.getLens().setNearFar(0.1, 1000)
         self.sunNP = app.render.attachNewNode(self.sun)
