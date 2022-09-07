@@ -1,4 +1,4 @@
-from panda3d.core import PointLight, LVector3
+from panda3d.core import PointLight, LVector3, LensNode, PerspectiveLens, SamplerState, TextureStage
 import pymunk
 from input import InputManager
 from enum import Enum
@@ -26,7 +26,36 @@ class Chopper:
         self.bodyNode = app.loader.loadModel("art/space-chopper/space-chopper.glb")
         self.bodyNode.setScale(scale, scale, scale)
         self.bodyNode.reparentTo(app.render)
-        self.bodyNode.setLight(scene.sunNP)
+
+        # self.shadowNode = self.bodyNode.attachNewNode(LensNode('shadowproj'))
+        # #lens = PerspectiveLens()
+        # lens = PerspectiveLens()
+        # lens.setNearFar(1, 5)
+        # self.shadowNode.node().setLens(lens)
+        # self.shadowNode.node().showFrustum()
+        # self.shadowNode.setHpr(0, -90, 0)
+        # self.shadowNode.find('frustum').setColor(1, 0, 0, 1)
+        # self.shadowNode.reparentTo(self.bodyNode)
+        # self.shadowNode.setPos(0, 0, self.height)
+
+        # tex = app.loader.loadTexture('art/space-chopper/shadow.png')
+        # tex.setWrapU(SamplerState.WMBorderColor)
+        # tex.setWrapV(SamplerState.WMBorderColor)
+        # tex.setBorderColor((1, 1, 1, 0))
+        # ts = TextureStage('ts')
+        # ts.setSort(1)
+        # ts.setColor((0.5, 0.5, 0.5, 0.5))
+        # ts.setMode(TextureStage.MCombine)
+        # ts.setCombineRgb(
+        #     TextureStage.CMInterpolate, 
+        #     TextureStage.CSTexture, 
+        #     TextureStage.COSrcColor,
+        #     TextureStage.CSPrevious,
+        #     TextureStage.COSrcColor,
+        #     TextureStage.CSTexture,
+        #     TextureStage.COOneMinusSrcColor
+        #     )
+        # scene.worldNP.projectTexture(ts, tex, self.shadowNode)
 
         self.light = PointLight("ChopperLight")
         self.light.setAttenuation(LVector3(1, 0, 1))
@@ -82,6 +111,7 @@ class Chopper:
         rot = self.body.angle
         
         self.bodyNode.setPos(self.pos.x, 0, self.pos.y)
+        # self.shadowNode.setHpr(0, -radians_to_degrees(rot) - 90, 0)
 
         self.heading = move_towards(self.heading, 90 * -self.direction.value, 360 * 5, dt)
         self.pitch = move_towards(self.pitch, radians_to_degrees(rot) * self.direction.value, 360 * 5, dt)

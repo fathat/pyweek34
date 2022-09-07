@@ -41,15 +41,16 @@ class Scene:
         self.sun = DirectionalLight('Sun')
         self.sun.setColor(LVector3(*tuple(self.scene_definition.sun_color)))
         self.sun.setDirection(LVector3(0, 1, -1).normalized())
-        self.sun.setShadowCaster(True, 1024, 1024)
+        self.sun.setShadowCaster(True, 2048, 2048)
         self.sunNP = app.render.attachNewNode(self.sun)
+        self.sunNP.reparentTo(self.app.render)
         self.app.render.setLight(self.sunNP)       
 
         add_node_path_as_collider(self.world, self.worldNP, self.space, app.render)
 
         self.chopper = chopper.Chopper(app, self)
 
-        print(app.render.ls())  
+        #print(app.render.ls())  
         self.npcs = []
         x = -99
         for i in range(0, 10):

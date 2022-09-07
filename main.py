@@ -12,13 +12,15 @@ import simplepbr
 load_prc_file_data("", """
     show-frame-rate-meter 1
     sync-video 1
-    win-size 1280 720
-    window-title Space Chopper
+    win-size 1600 900
+    window-title SPACE CHOPPER!!
     want-pstats 0
     pstats-tasks 0
     task-timer-verbose 0
     want-directtools #f
     want-tk #f
+    load-file-type p3assimp
+    model-cache-dir
 """)
 
 class RedPlanetApp(ShowBase):
@@ -27,6 +29,16 @@ class RedPlanetApp(ShowBase):
 
     def __init__(self):
         ShowBase.__init__(self)
+
+        if not base.win.getGsg().getSupportsBasicShaders():
+            self.t = addTitle(
+                "Shadow Demo: Video driver reports that shaders are not supported.")
+            return
+        if not base.win.getGsg().getSupportsDepthTexture():
+            self.t = addTitle(
+                "Shadow Demo: Video driver reports that depth textures are not supported.")
+            return
+
         self.setBackgroundColor(0.0, 0.6, 0.8)
         self.gltfLoader = GltfLoader()
         
@@ -37,7 +49,7 @@ class RedPlanetApp(ShowBase):
         self.enableParticles()
         self.disableMouse()
         self.input = InputManager(self)
-
+        self.accept("v", base.bufferViewer.toggleEnable)
         self.perPixelEnabled = True
         self.shadowsEnabled = True
         self.camLens.set_fov(90)
@@ -48,7 +60,11 @@ class RedPlanetApp(ShowBase):
         ## We need to use setShaderAuto or simplepbr eventually, but setShaderAut
         ## doesn't seem to be working with lights properly for whatever reason..
         #simplepbr.init(enable_shadows=True, enable_fog=True, use_normal_maps=True)
-        #self.render.setShaderAuto()
+        self.render.setShaderAuto()
+        materials = self.render.findAllMaterials()
+        print(materials)
+
+#        print(self.render.ls())
         #self.render.setLight(self.scene.sunNP)
         self.clock = ClockObject.getGlobalClock()
         self.updateTask = taskMgr.add(self.update_task, "update_task")
