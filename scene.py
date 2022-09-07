@@ -67,7 +67,7 @@ class Scene:
         self.collisionDebugNP.clearShader()
         add_node_path_as_collider(self.world, self.worldNP, self.space, self.collisionDebugNP)
 
-        self.chopper = chopper.Chopper(app, self)
+        self.chopper = chopper.Chopper(app, self, self.scene_definition.spawn_point)
 
         #print(app.render.ls())  
         self.npcs = []

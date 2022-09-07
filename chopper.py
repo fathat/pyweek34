@@ -1,8 +1,8 @@
-from panda3d.core import PointLight, LVector3, LensNode, PerspectiveLens, SamplerState, TextureStage, LQuaternionf
+from panda3d.core import PointLight, LVector3, LensNode, PerspectiveLens, SamplerState, TextureStage, LQuaternionf, LineSegs, NodePath
 import pymunk
 from input import InputManager
 from enum import Enum
-from utils import clamp, not_zero, radians_to_degrees, damp, move_towards, slerp
+from utils import clamp, not_zero, radians_to_degrees, damp, move_towards, slerp, almost_zero
 from masks import CATEGORY_PLAYER, CATEGORY_WALL
 import math
 
@@ -20,16 +20,27 @@ def opposite_direction(d: Direction):
 
 
 class Chopper:
-    width: float = 3.0
-    height: float = 1.5
+    width: float = 3.2
+    hull_top: float = 1.25
+    hull_mid: float = -0.25
+    hull_floor: float = -1.0
+
+    skid_floor: float = -1.5
+    skid_height: float = 0.25
+
+    rotor_floor: float = 1.5
+    rotor_height: float = 0.25
+    rotor_radius: float = 1.5
+
     scale: float = 1.0
     direction: Direction = Direction.RIGHT
     scene: "scene.Scene"
     space: pymunk.Space
 
-    def __init__(self, app, scene: "scene.Scene"):
-        width, height, scale = self.width, self.height, self.scale
+    def __init__(self, app, scene: "scene.Scene", spawn_point: tuple[float, float]):
+        width, scale = self.width, self.scale
         space = scene.space
+        self.spawn_point = spawn_point
         self.scene = scene
         self.space = space
         self.input = app.input
@@ -75,13 +86,66 @@ class Chopper:
         #self.roterNode.reparentTo(self.bodyNode)
 
         self.body = pymunk.Body(5, 100)
-        self.body.position = 0, 30
-        shape = pymunk.Poly(self.body, [(-width*scale, -height*scale), (width*scale, -height*scale), (width*scale, height*scale), (-width*scale, height*scale)])
-        shape.friction = 0.5
-        shape.filter = pymunk.ShapeFilter(categories=CATEGORY_PLAYER)
-        shape.collision_type = CATEGORY_PLAYER
-        shape.data = self
-        space.add(self.body, shape)
+        self.body.position = self.spawn_point
+
+        # hull
+        hull_vertices = [
+            (-width*scale, self.hull_mid*scale), 
+            (0, self.hull_floor*scale), 
+            (width*scale, self.hull_mid*scale), 
+            (0, self.hull_top*scale)
+        ]
+        hull_shape = pymunk.Poly(self.body, hull_vertices)
+        hull_shape.friction = 0.5
+        hull_shape.filter = pymunk.ShapeFilter(categories=CATEGORY_PLAYER)
+        hull_shape.collision_type = CATEGORY_PLAYER
+        hull_shape.data = self
+        
+        # skids
+        skid_vertices = [
+            (-width*scale,  self.skid_floor*scale), 
+            ( width*scale,  self.skid_floor*scale), 
+            ( width*scale,  (self.skid_floor + self.skid_height)*scale),  
+            (-width*scale,  (self.skid_floor + self.skid_height)*scale)
+        ]
+        skid_shape = pymunk.Poly(self.body, skid_vertices)
+        skid_shape.friction = 0.5
+        skid_shape.filter = pymunk.ShapeFilter(categories=CATEGORY_PLAYER)
+        skid_shape.collision_type = CATEGORY_PLAYER
+        skid_shape.data = self
+
+        # rotor
+        rotor_vertices = [
+            (-self.rotor_radius*scale,  self.rotor_floor*scale), 
+            ( self.rotor_radius*scale,  self.rotor_floor*scale), 
+            ( self.rotor_radius*scale,  (self.rotor_floor + self.rotor_height)*scale),  
+            (-self.rotor_radius*scale,  (self.rotor_floor + self.rotor_height)*scale)
+        ]
+        rotor_shape = pymunk.Poly(self.body, rotor_vertices)
+        rotor_shape.friction = 0.5
+        rotor_shape.filter = pymunk.ShapeFilter(categories=CATEGORY_PLAYER)
+        rotor_shape.collision_type = CATEGORY_PLAYER
+        rotor_shape.data = self
+        
+        space.add(self.body, hull_shape, skid_shape, rotor_shape)
+        
+        self.debug_lines = LineSegs()
+        self.debug_lines.setColor(1, 0, 0, 1)
+        def draw_shape(vertices):
+            self.debug_lines.moveTo(vertices[0][0], 0, vertices[0][1])
+            for v in vertices[1:]:
+                self.debug_lines.drawTo(v[0], 0, v[1])
+            self.debug_lines.drawTo(vertices[0][0], 0, vertices[0][1])
+
+        draw_shape(hull_vertices)
+        draw_shape(skid_vertices)
+        draw_shape(rotor_vertices)
+
+        self.debug_lines.setThickness(4)
+        self.debug_line_node = self.debug_lines.create()
+        self.debug_line_np = NodePath(self.debug_line_node)
+        self.debug_line_np.reparentTo(self.bodyNode)
+        self.debug_line_np.setHpr(90, 0, 0)
 
     def velocity(self) -> float: return self.body.velocity.length
 
@@ -143,7 +207,11 @@ class Chopper:
             self.bodyNode.setHpr(LVector3(90 * -self.direction.value, radians_to_degrees(rot) * self.direction.value, 0))
 
     def distance_to_ground(self):
-        self.space.segment_query((self.body.position.x, self.body.position.y), (self.body.position.x, self.body.position.y - 50), self.width, CATEGORY_WALL)
+        segment_query_info_list = self.space.segment_query((self.body.position.x, self.body.position.y), (self.body.position.x, self.body.position.y - 50), 0.1, pymunk.ShapeFilter(mask=CATEGORY_WALL))
+        segment_query_info_list.sort(key=lambda x: x.alpha)
+        if len(segment_query_info_list) == 0: return -1
+        if almost_zero(segment_query_info_list[0].alpha): return 0
+        return (segment_query_info_list[0].point - self.body.position).length
 
     def pickup(self, human):
         human.destroy()
