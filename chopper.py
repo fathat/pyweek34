@@ -1,13 +1,22 @@
-from panda3d.core import PointLight, LVector3, LensNode, PerspectiveLens, SamplerState, TextureStage
+from panda3d.core import PointLight, LVector3, LensNode, PerspectiveLens, SamplerState, TextureStage, LQuaternionf
 import pymunk
 from input import InputManager
 from enum import Enum
-from utils import not_zero, radians_to_degrees, damp, move_towards, CATEGORY_PLAYER
+from utils import not_zero, radians_to_degrees, damp, move_towards, slerp
+from masks import CATEGORY_PLAYER
+import math
 
 
 class Direction(Enum):
     LEFT = -1
     RIGHT = 1
+
+
+def opposite_direction(d: Direction):
+    if d == Direction.LEFT:
+        return Direction.RIGHT
+    else:
+        return Direction.LEFT
 
 
 class Chopper:
@@ -21,8 +30,8 @@ class Chopper:
         space = scene.space
         self.input = app.input
         self.score = 0
-        self.heading = -90
-        self.pitch = 0.0
+        self.flip_heading_t = 0
+        self.flip_heading = False
         self.bodyNode = app.loader.loadModel("art/space-chopper/space-chopper.dae")
         self.bodyNode.setScale(scale, scale, scale)
         self.bodyNode.reparentTo(app.render)
@@ -73,26 +82,30 @@ class Chopper:
     def velocity(self) -> float: return self.body.velocity.length
 
     def update(self, dt: float):
-        input: InputManager = self.input
+        im: InputManager = self.input
 
-        if not_zero(input.throttle()):
-            self.body.apply_force_at_local_point((0, 200 * input.throttle()), (0, 0))
+        if not_zero(im.throttle()):
+            self.body.apply_force_at_local_point((0, 200 * im.throttle()), (0, 0))
 
-        if input.is_booster_rocket_pressed():
+        if im.is_booster_rocket_pressed():
             self.body.apply_force_at_local_point((self.direction.value * 200, 0), (0, 0))
         
-        if input.is_reverse_booster_rocket_pressed():
+        if im.is_reverse_booster_rocket_pressed():
             self.body.apply_force_at_local_point((-self.direction.value * 200, 0), (0, 0))
 
-        if input.is_face_left_pressed():
+        if im.is_face_left_pressed() and self.direction != Direction.LEFT:
             self.direction = Direction.LEFT
-        elif input.is_face_right_pressed():
+            self.flip_heading_t = 0
+            self.flip_heading = True
+        elif im.is_face_right_pressed() and self.direction != Direction.RIGHT:
             self.direction = Direction.RIGHT
+            self.flip_heading_t = 0
+            self.flip_heading = True
 
-        if not_zero(input.pitch_axis()):
-            self.body.apply_force_at_world_point((10 * input.pitch_axis(), 0), (self.body.position.x, self.body.position.y))
-            self.body.apply_force_at_local_point((0, 200 * input.pitch_axis()), (-self.width, 0))
-            self.body.apply_force_at_local_point((0, -200 * input.pitch_axis()), (self.width, 0))
+        if not_zero(im.pitch_axis()):
+            self.body.apply_force_at_world_point((10 * im.pitch_axis(), 0), (self.body.position.x, self.body.position.y))
+            self.body.apply_force_at_local_point((0, 200 * im.pitch_axis()), (-self.width, 0))
+            self.body.apply_force_at_local_point((0, -200 * im.pitch_axis()), (self.width, 0))
 
 
         self.body.velocity = damp(self.body.velocity, .95, dt)
@@ -101,13 +114,30 @@ class Chopper:
 
         self.pos = self.body.position
         rot = self.body.angle
-        
-        self.bodyNode.setPos(self.pos.x, 0, self.pos.y)
-        # self.shadowNode.setHpr(0, -radians_to_degrees(rot) - 90, 0)
 
-        self.heading = move_towards(self.heading, 90 * -self.direction.value, 360 * 5, dt)
-        self.pitch = move_towards(self.pitch, radians_to_degrees(rot) * self.direction.value, 360 * 5, dt)
-        self.bodyNode.setHpr(self.heading, self.pitch, 0)
+        while rot < 0:
+            rot += math.pi * 2
+        while rot > math.pi * 2:
+            rot -= math.pi * 2
+
+        self.body.angle = rot
+
+        self.bodyNode.setPos(self.pos.x, 0, self.pos.y)
+
+        if self.flip_heading:
+            if self.flip_heading_t >= 1.0:
+                self.flip_heading_t = 1.0
+                self.flip_heading = False
+
+            srcRotation = LQuaternionf()
+            srcRotation.setHpr(LVector3(90 * self.direction.value, radians_to_degrees(rot) * -self.direction.value, 0))
+            targetRotation = LQuaternionf()
+            targetRotation.setHpr(LVector3(90 * -self.direction.value, radians_to_degrees(rot) * self.direction.value, 0))
+            self.bodyNode.setQuat(slerp(srcRotation, targetRotation, -self.flip_heading_t))
+            self.flip_heading_t = move_towards(self.flip_heading_t, 1.0, 5.0, dt)
+        else:
+            self.bodyNode.setHpr(LVector3(90 * -self.direction.value, radians_to_degrees(rot) * self.direction.value, 0))
+
 
     def pickup(self, human):
         human.destroy()

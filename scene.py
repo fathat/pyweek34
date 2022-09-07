@@ -3,6 +3,8 @@ import chopper
 import humanoid
 import pymunk
 from pymunk import Vec2d
+
+import masks
 import utils
 import distributorOfPain
 from scene_colliders import add_node_path_as_collider
@@ -40,24 +42,30 @@ class Scene:
         self.worldNP.setFog(expfog)
         
         self.sun = DirectionalLight('Sun')
-        self.sun.setColor(LVector3(*tuple(self.scene_definition.sun_color))* 0.5) 
-        self.sun.setShadowCaster(True, 4096, 4096)
+        self.sun.setColor(LVector3(*tuple(self.scene_definition.sun_color)) * 0.5)
         self.sun.getLens().setFilmSize(400, 200)
-        self.sun.getLens().setNearFar(0.1, 1000)
+        self.sun.getLens().setNearFar(0.1, 500)
+        self.sun.setShadowCaster(True, 2048, 2048)
+        self.sun.setCameraMask(masks.SUN_SHADOW_CAMERA_MASK)
         self.sunNP = app.render.attachNewNode(self.sun)
         self.sunNP.reparentTo(self.app.render)
         self.sunNP.setPos(0, 0, 500)
         self.sunNP.setHpr(0, -90, 0)
         self.app.render.setLight(self.sunNP)
 
+        print("Shadow buffer size", self.sun.getShadowBufferSize())
+
         self.extraSun = DirectionalLight('Extra Sun')
         self.extraSun.setColor(LVector3(*tuple(self.scene_definition.sun_color)))   
-        self.extraSun.setDirection(LVector3(0, 1, -0.5).normalized())
+        self.extraSun.setDirection(LVector3(0.5, 1, -0.5).normalized())
         self.extraSunNP = app.render.attachNewNode(self.extraSun)
         self.extraSunNP.reparentTo(self.app.render)
         self.app.render.setLight(self.extraSunNP)
 
-        add_node_path_as_collider(self.world, self.worldNP, self.space, app.render)
+        self.collisionDebugNP = app.render.attachNewNode("Collision Lines")
+        self.collisionDebugNP.hide(masks.SUN_SHADOW_CAMERA_MASK)
+        self.collisionDebugNP.clearShader()
+        add_node_path_as_collider(self.world, self.worldNP, self.space, self.collisionDebugNP)
 
         self.chopper = chopper.Chopper(app, self)
 

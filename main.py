@@ -65,10 +65,6 @@ class RedPlanetApp(ShowBase):
         materials = self.render.findAllMaterials()
         print(materials)
 
-
-
-#        print(self.render.ls())
-        #self.render.setLight(self.scene.sunNP)
         self.clock = ClockObject.getGlobalClock()
         self.updateTask = taskMgr.add(self.update_task, "update_task")
 

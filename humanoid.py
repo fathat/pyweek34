@@ -1,5 +1,7 @@
 import pymunk
 import math
+
+import masks
 import utils
 
 from direct.actor.Actor import Actor
@@ -28,8 +30,8 @@ class humanoid:
         self.body.position = 70, 30
         self.shape = pymunk.Poly(self.body, poly)
         self.shape.friction = 0.5
-        self.shape.filter = pymunk.ShapeFilter(categories=utils.CATEGORY_HUMANOID)
-        self.shape.collision_type = utils.CATEGORY_HUMANOID
+        self.shape.filter = pymunk.ShapeFilter(categories=masks.CATEGORY_HUMANOID)
+        self.shape.collision_type = masks.CATEGORY_HUMANOID
         self.shape.data = self
         space.add(self.body, self.shape)
 
@@ -49,7 +51,7 @@ class humanoid:
         self.bodyNode.setP(0)
 
         if self.target:
-            filter = pymunk.ShapeFilter(mask=utils.CATEGORY_PLAYER)
+            filter = pymunk.ShapeFilter(mask=masks.CATEGORY_PLAYER)
             result = self.space.point_query_nearest(self.pos, 30, filter)
             
             if result != None:

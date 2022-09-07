@@ -3,14 +3,6 @@ from panda3d.core import Plane, LPoint3f
 
 EPSILON = 0.0001
 
-CATEGORY_WALL = 0x01
-CATEGORY_PLAYER = 0x02
-CATEGORY_HUMANOID = 0x04
-CATEGORY_ENEMY = 0x08
-CATEGORY_PLAYER_PROJECTILE = 0x10
-CATEGORY_ENEMY_PROJECTILE = 0x20
-
-
 def degrees_to_radians(deg: float):
     return deg * (math.pi/180.0)
 
@@ -39,6 +31,27 @@ def clamp(x, minx, maxx):
 # Smoothing rate dictates the proportion of source remaining after one second
 def damp(source: float, smoothing: float, dt: float) -> float:
     return source * math.pow(smoothing, dt)
+
+
+def slerp(q1, q2, t):
+    costheta = q1.dot(q2)
+    if costheta < 0.0:
+        costheta = -costheta
+        q1 = q1.conjugate()
+    elif costheta > 1.0:
+        costheta = 1.0
+
+    theta = math.acos(costheta)
+    if abs(theta) < 0.01:
+        return q2
+
+    sintheta = math.sqrt(1.0 - costheta * costheta)
+    if abs(sintheta) < 0.01:
+        return (q1+q2)*0.5
+
+    r1 = math.sin((1.0 - t) * theta) / sintheta
+    r2 = math.sin(t * theta) / sintheta
+    return (q1*r1) + (q2*r2)
 
 
 def move_towards(source: float, target: float, rate: float, dt: float) -> float:

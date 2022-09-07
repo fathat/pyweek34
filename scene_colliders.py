@@ -2,6 +2,7 @@ import pymunk
 from panda3d.core import GeomVertexReader, Plane, LVector3f, LPoint3f, LineSegs, NodePath
 from pymunk import Vec2d
 
+import masks
 import utils
 
 
@@ -64,7 +65,7 @@ def create_segments(transformed_triangle, physics_plane, space, render):
             p2 = segments[i+1].getXz()
             shape = pymunk.Segment(space.static_body, Vec2d(*p1), Vec2d(*p2), 0.0)
             shape.friction = 1.0
-            shape.filter = pymunk.ShapeFilter(categories=utils.CATEGORY_WALL)
+            shape.filter = pymunk.ShapeFilter(categories=masks.CATEGORY_WALL)
             space.add(shape)
 
             if render:
