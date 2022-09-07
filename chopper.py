@@ -23,7 +23,7 @@ class Chopper:
         self.score = 0
         self.heading = -90
         self.pitch = 0.0
-        self.bodyNode = app.loader.loadModel("art/space-chopper/space-chopper.glb")
+        self.bodyNode = app.loader.loadModel("art/space-chopper/space-chopper.dae")
         self.bodyNode.setScale(scale, scale, scale)
         self.bodyNode.reparentTo(app.render)
 

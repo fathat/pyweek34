@@ -1,6 +1,7 @@
 from direct.showbase.ShowBase import ShowBase
 from panda3d.physics import *
 from panda3d.core import *
+from direct.actor import Actor
 from direct.task import Task
 from direct.task.TaskManagerGlobal import taskMgr
 from scene import Scene
@@ -57,6 +58,12 @@ class RedPlanetApp(ShowBase):
         self.camera.setPos(0, -50, 0)
         self.scene = Scene(self, 'debugscene')
         
+        self.pandaAxis = self.render.attachNewNode('panda axis')
+        self.pandaModel = Actor.Actor('panda-model', {'walk': 'panda-walk4'})
+        self.pandaModel.reparentTo(self.pandaAxis)
+        self.pandaModel.setPos(9, 0, 0)
+        self.pandaModel.setScale(0.01)
+
         ## We need to use setShaderAuto or simplepbr eventually, but setShaderAut
         ## doesn't seem to be working with lights properly for whatever reason..
         #simplepbr.init(enable_shadows=True, enable_fog=True, use_normal_maps=True)
