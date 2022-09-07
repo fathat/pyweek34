@@ -37,6 +37,7 @@ class humanoid:
         self.destroyed = True
         self.shape.data = None
         self.space.remove(self.body, self.shape)
+        self.bodyNode.cleanup()
         self.bodyNode.remove_node()
 
     def update(self,dt):
