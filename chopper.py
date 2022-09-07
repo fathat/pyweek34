@@ -57,15 +57,7 @@ class Chopper:
         #     )
         # scene.worldNP.projectTexture(ts, tex, self.shadowNode)
 
-        self.light = PointLight("ChopperLight")
-        self.light.setAttenuation(LVector3(1, 0, 1))
-        self.light.setMaxDistance(60)
-        self.lightNP = self.bodyNode.attachNewNode(self.light)
-        self.lightNP.reparentTo(self.bodyNode)
-        
-        app.render.setLight(self.lightNP)
-        
-
+       
         #self.roterNode = base.loader.loadModel("models/Roter.stl")
         #self.roterNode.reparentTo(self.bodyNode)
 
