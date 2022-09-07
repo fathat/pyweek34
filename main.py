@@ -4,6 +4,7 @@ from panda3d.core import *
 from direct.actor import Actor
 from direct.task import Task
 from direct.task.TaskManagerGlobal import taskMgr
+from direct.filter.CommonFilters import CommonFilters
 from scene import Scene
 from gltf.loader import GltfLoader
 
@@ -22,6 +23,8 @@ load_prc_file_data("", """
     want-tk #f
     load-file-type p3assimp
     model-cache-dir
+    hardware-animated-vertices true
+    basic-shaders-only false
 """)
 
 class RedPlanetApp(ShowBase):
@@ -40,7 +43,7 @@ class RedPlanetApp(ShowBase):
                 "Shadow Demo: Video driver reports that depth textures are not supported.")
             return
 
-        self.setBackgroundColor(0.0, 0.6, 0.8)
+        
         self.gltfLoader = GltfLoader()
         
         ambientLight = AmbientLight("ambient light")
@@ -58,15 +61,11 @@ class RedPlanetApp(ShowBase):
         self.camera.setPos(0, -50, 0)
         self.scene = Scene(self, 'debugscene')
         
-        self.pandaAxis = self.render.attachNewNode('panda axis')
-        self.pandaModel = Actor.Actor('panda-model', {'walk': 'panda-walk4'})
-        self.pandaModel.reparentTo(self.pandaAxis)
-        self.pandaModel.setPos(9, 0, 0)
-        self.pandaModel.setScale(0.01)
-
         self.render.setShaderAuto()
         materials = self.render.findAllMaterials()
         print(materials)
+
+
 
 #        print(self.render.ls())
         #self.render.setLight(self.scene.sunNP)
