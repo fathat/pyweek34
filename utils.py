@@ -98,3 +98,7 @@ def remove_duplicate_points(points: list[LPoint3f]) -> list[LPoint3f]:
         if not is_dup:
             final_list.append(p)
     return final_list
+
+def firstorder_lowpass(prev, curr, dt, tau):
+    alpha = 1.0 - math.exp(-dt / tau)
+    return prev + alpha * (curr - prev)

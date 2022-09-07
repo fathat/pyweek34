@@ -37,6 +37,7 @@ class humanoid:
         self.destroyed = True
         self.shape.data = None
         self.space.remove(self.body, self.shape)
+        self.bodyNode.cleanup()
         self.bodyNode.remove_node()
 
     def update(self,dt):
@@ -49,12 +50,12 @@ class humanoid:
 
         if self.target:
             filter = pymunk.ShapeFilter(mask=utils.CATEGORY_PLAYER)
-            result = self.space.point_query_nearest(self.pos, 20, filter)
+            result = self.space.point_query_nearest(self.pos, 30, filter)
             
             if result != None:
                 diff = result.point - self.pos
 
-                if diff.y < 5:
+                if diff.y < 5 and abs(self.target.body.velocity_at_local_point((0,0))) < 1:
                     force = 100 * diff.normalized()
                     self.body.apply_force_at_local_point((force.x, 0), (0, 0))
                     
@@ -64,7 +65,7 @@ class humanoid:
                         self.new_state = State.RUN_R
 
             if self.new_state == State.IDLE:
-                if self.target.pos.get_distance(self.pos) < 30:
+                if self.target.pos.get_distance(self.pos) <= 30:
                     self.new_state = State.WAVE
 
         if self.new_state != self.state:

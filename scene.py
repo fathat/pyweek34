@@ -26,6 +26,7 @@ class Scene:
         distributorOfPain.init(self.space)
         self.pymunk_timer = 0.0
         self.camera_fov = 35
+        self.cam_dist = -80
        
         color = tuple(self.scene_definition.background_color)
         expfog = Fog("Fog")
@@ -86,7 +87,14 @@ class Scene:
                     self.npcs[i].update(pymunk_step)
             
             self.sunNP.setPos(self.chopper.pos.x, 0, self.chopper.pos.y + 250)
-            self.app.camera.setPos(self.chopper.pos.x, -45, self.chopper.pos.y + 5)
+            
+            cam_dist = -45 * abs(self.chopper.body.velocity_at_local_point((0,0))) / 10
+            cam_dist = max(-45, min(cam_dist, -20))
+
+            self.cam_dist = utils.firstorder_lowpass(self.cam_dist, cam_dist, dt, 1.0)
+
+            #self.app.camera.setPos(self.chopper.pos.x, -45, self.chopper.pos.y + 5)
+            self.app.camera.setPos(self.chopper.pos.x, self.cam_dist, self.chopper.pos.y + 15)
             self.app.camera.lookAt(self.chopper.pos.x, 0, self.chopper.pos.y)
 
             # fov_target = 60 + utils.clamp((self.chopper.velocity() / 5.0) * 0.5 + self.chopper.body.angular_velocity.length , 0.0, 1.0) * 25
