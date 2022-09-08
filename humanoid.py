@@ -3,7 +3,7 @@ import math
 
 import masks
 import utils
-
+from panda3d.core import AmbientLight, Vec4, Material
 from direct.actor.Actor import Actor
 from enum import Enum, auto
 
@@ -13,7 +13,7 @@ class State(Enum):
     RUN_R = auto()
     WAVE = auto()
 
-class humanoid:
+class Humanoid:
     def __init__(self, base, space):
         self.target = None
         self.space = space

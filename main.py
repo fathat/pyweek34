@@ -8,9 +8,20 @@ from direct.task.TaskManagerGlobal import taskMgr
 from direct.filter.CommonFilters import CommonFilters
 from scene import Scene
 from gltf.loader import GltfLoader
+from gltf.converter import GltfSettings
 
 from input import InputManager
 import simplepbr
+
+GltfLoader.global_settings = GltfSettings(
+    physics_engine='builtin',
+    print_scene=True,
+    skip_axis_conversion=False,
+    no_srgb=True,
+    textures='ref',
+    legacy_materials=True,
+    animations='embed'
+)
 
 load_prc_file_data("", """
     show-frame-rate-meter 1
@@ -35,17 +46,6 @@ class RedPlanetApp(ShowBase):
     def __init__(self):
         ShowBase.__init__(self)
 
-        if not base.win.getGsg().getSupportsBasicShaders():
-            self.t = addTitle(
-                "Shadow Demo: Video driver reports that shaders are not supported.")
-            return
-        if not base.win.getGsg().getSupportsDepthTexture():
-            self.t = addTitle(
-                "Shadow Demo: Video driver reports that depth textures are not supported.")
-            return
-
-        
-        self.gltfLoader = GltfLoader()
         self.font = self.loader.loadFont("art/fonts/bedstead/bedstead.otf")
         
         ambientLight = AmbientLight("ambient light")
@@ -62,8 +62,7 @@ class RedPlanetApp(ShowBase):
         self.camLens.set_near_far(1, 10000)
         self.camera.setPos(0, -50, 0)
         self.scene = Scene(self, 'debugscene')
-        
-        self.render.setShaderAuto()
+
         materials = self.render.findAllMaterials()
         print(materials)
 

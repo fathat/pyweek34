@@ -40,12 +40,13 @@ class Scene:
         self.worldNP = NodePath(self.world)
         self.worldNP.reparentTo(self.app.render)
         self.worldNP.setFog(expfog)
+        self.worldNP.setShaderAuto()
         
         self.sun = DirectionalLight('Sun')
         self.sun.setColor(LVector3(*tuple(self.scene_definition.sun_color)) * 0.5)
         self.sun.getLens().setFilmSize(400, 200)
         self.sun.getLens().setNearFar(0.1, 500)
-        self.sun.setShadowCaster(True, 2048, 2048)
+        self.sun.setShadowCaster(True, 4096, 4096)
         self.sun.setCameraMask(masks.SUN_SHADOW_CAMERA_MASK)
         self.sunNP = app.render.attachNewNode(self.sun)
         self.sunNP.reparentTo(self.app.render)
@@ -73,7 +74,7 @@ class Scene:
         self.npcs = []
         x = -99
         for i in range(0, 10):
-            human = humanoid.humanoid(app, self.space)
+            human = humanoid.Humanoid(app, self.space)
             human.target = self.chopper
             human.setPos(x, 20)
             x += 20
