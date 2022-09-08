@@ -65,7 +65,9 @@ def create_segments(transformed_triangle, physics_plane, space, render):
             p2 = segments[i+1].getXz()
             shape = pymunk.Segment(space.static_body, Vec2d(*p1), Vec2d(*p2), 0.0)
             shape.friction = 1.0
+            shape.collision_type = masks.CATEGORY_WALL
             shape.filter = pymunk.ShapeFilter(categories=masks.CATEGORY_WALL)
+            shape.data = None
             space.add(shape)
 
             if render:

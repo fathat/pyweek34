@@ -7,6 +7,7 @@ from masks import CATEGORY_PLAYER, CATEGORY_WALL
 import math
 import simplepbr
 from direct.actor.Actor import Actor
+import weapons
 
 
 class Direction(Enum):
@@ -45,6 +46,7 @@ class Chopper:
         self.spawn_point = spawn_point
         self.scene = scene
         self.space = space
+        self.app = app
         self.input = app.input
         self.score = 0
         self.flip_heading_t = 0
@@ -135,6 +137,8 @@ class Chopper:
         rotor_shape.data = self
         
         space.add(self.body, hull_shape, skid_shape, rotor_shape)
+
+        self.weapons = [weapons.machine_gun(app, space), weapons.rocket_launcher(app, space)]
         
         self.debug_lines = LineSegs()
         self.debug_lines.setColor(1, 0, 0, 1)
@@ -180,6 +184,11 @@ class Chopper:
             self.direction = Direction.RIGHT
             self.flip_heading_t = 0
             self.flip_heading = True
+
+        self.weapons[im.weap_seld].update(dt)
+
+        if im.fire_pressed:
+            self.weapons[im.weap_seld].fire(self.body)
 
         if not_zero(im.pitch_axis()):
             self.body.apply_force_at_world_point((10 * im.pitch_axis(), 0), (self.body.position.x, self.body.position.y))
