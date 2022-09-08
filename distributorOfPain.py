@@ -4,21 +4,21 @@ def pickup_humanoid(arbiter, space, data):
     return True
 
 def inflict_damage(arbiter, space, data):
-    arbiter.shapes[0].data.hurt(arbiter.shapes[1].data)
-    return True
+    arbiter.shapes[0].data.collision(arbiter.shapes[1].data)
+    return False
 
 def init(space):
     h = space.add_collision_handler(masks.CATEGORY_PLAYER, masks.CATEGORY_HUMANOID)
     h.pre_solve = pickup_humanoid
 
-    h = space.add_collision_handler(masks.CATEGORY_HUMANOID, masks.CATEGORY_PLAYER_PROJECTILE)
+    h = space.add_collision_handler(masks.CATEGORY_PROJECTILE, masks.CATEGORY_HUMANOID)
     h.pre_solve = inflict_damage
 
-    h = space.add_collision_handler(masks.CATEGORY_HUMANOID, masks.CATEGORY_PLAYER_PROJECTILE)
+    h = space.add_collision_handler(masks.CATEGORY_PROJECTILE, masks.CATEGORY_PLAYER)
     h.pre_solve = inflict_damage
 
-    h = space.add_collision_handler(masks.CATEGORY_PLAYER, masks.CATEGORY_ENEMY_PROJECTILE)
+    h = space.add_collision_handler(masks.CATEGORY_PROJECTILE, masks.CATEGORY_ENEMY)
     h.pre_solve = inflict_damage
 
-    h = space.add_collision_handler(masks.CATEGORY_ENEMY, masks.CATEGORY_PLAYER_PROJECTILE)
+    h = space.add_collision_handler(masks.CATEGORY_PROJECTILE, masks.CATEGORY_WALL)
     h.pre_solve = inflict_damage

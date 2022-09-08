@@ -6,6 +6,7 @@ from pymunk import Vec2d
 
 import masks
 import utils
+import objects
 import distributorOfPain
 from scene_colliders import add_node_path_as_collider
 from scene_definition import SceneDefinition
@@ -93,6 +94,13 @@ class Scene:
                     self.npcs.pop(i)
                 else:
                     self.npcs[i].update(pymunk_step)
+
+            for i in range(len(objects.objects) - 1, -1, -1):
+                if objects.objects[i].destroyed:
+                    objects.objects[i].destroy()
+                    objects.objects.pop(i)
+                else:
+                    objects.objects[i].update(pymunk_step)
             
             self.sunNP.setPos(self.chopper.pos.x, 0, self.chopper.pos.y + 250)
             

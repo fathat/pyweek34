@@ -11,6 +11,9 @@ class InputManager:
     face_left_pressed = False
     face_right_pressed = False
 
+    fire_pressed = False
+    weap_seld = 0
+
     boost_pressed = False
     reverse_boost_pressed = False
 
@@ -48,6 +51,10 @@ class InputManager:
         app.accept('arrow_left', self.on_face_left, [True])
         app.accept('arrow_right-up', self.on_face_right, [False])
         app.accept('arrow_right', self.on_face_right, [True])
+        app.accept('space-up', self.on_fire, [False])
+        app.accept('space', self.on_fire, [True])
+        app.accept('1', self.on_sel_weap, [0])
+        app.accept('2', self.on_sel_weap, [1])
 
     def connect(self, device):
         """Event handler that is called when a device is discovered."""
@@ -167,4 +174,13 @@ class InputManager:
 
     def on_face_right(self, down):
         self.face_right_pressed = down
+
+    def on_fire(self, down):
+        self.fire_pressed = down
+
+    def on_firon_sel_weape(self, index):
+        self.weap_seld = index
+
+    def on_sel_weap(self, index):
+        self.weap_seld = index
 
