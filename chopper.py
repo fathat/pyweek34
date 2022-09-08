@@ -6,6 +6,7 @@ from utils import clamp, not_zero, radians_to_degrees, damp, move_towards, slerp
 from masks import CATEGORY_PLAYER, CATEGORY_WALL
 import math
 import simplepbr
+from direct.actor.Actor import Actor
 
 
 class Direction(Enum):
@@ -48,9 +49,9 @@ class Chopper:
         self.score = 0
         self.flip_heading_t = 0
         self.flip_heading = False
-        self.bodyNode = app.loader.loadModel("art/space-chopper/space-chopper.glb")
-        self.bodyNode.setScale(scale, scale, scale)
+        self.bodyNode = Actor("art/space-chopper/space-chopper.glb")
         self.bodyNode.reparentTo(app.render)
+        self.bodyNode.loop("blade")
 
         self.bodyNode.setShaderAuto()
         self.bodyNode.setTextureOff(1)
@@ -153,6 +154,8 @@ class Chopper:
         self.debug_line_np.reparentTo(self.bodyNode)
         self.debug_line_np.setHpr(90, 0, 0)
 
+        self.debug_line_np.hide()
+
     def velocity(self) -> float: return self.body.velocity.length
 
     def update(self, dt: float):
@@ -160,6 +163,8 @@ class Chopper:
 
         if not_zero(im.throttle()):
             self.body.apply_force_at_local_point((0, 200 * im.throttle()), (0, 0))
+
+        self.bodyNode.setPlayRate(5.0 + 15 * im.throttle(), "blade")
 
         if im.is_booster_rocket_pressed():
             self.body.apply_force_at_local_point((self.direction.value * 200, 0), (0, 0))
