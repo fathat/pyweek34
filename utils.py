@@ -1,6 +1,8 @@
 import math
-from panda3d.core import Plane, LPoint3f
 from enum import Enum
+from typing import List, Optional
+from panda3d.core import Plane, LPoint3f
+
 
 EPSILON = 0.0001
 
@@ -77,7 +79,7 @@ def move_towards(source: float, target: float, rate: float, dt: float) -> float:
         return max(source - rate * dt, target)
 
 
-def segment_plane_intersection(p1: LPoint3f, p2: LPoint3f, plane: Plane) -> list[LPoint3f]:
+def segment_plane_intersection(p1: LPoint3f, p2: LPoint3f, plane: Plane) -> List[LPoint3f]:
     points = []
 
     d1 = plane.distToPlane(p1)
@@ -106,7 +108,7 @@ def segment_plane_intersection(p1: LPoint3f, p2: LPoint3f, plane: Plane) -> list
     return [intersection_point]
 
 
-def triangle_plane_intersection(tri: list[LPoint3f], plane: Plane) -> list[LPoint3f] | None:
+def triangle_plane_intersection(tri: List[LPoint3f], plane: Plane) -> Optional[List[LPoint3f]]:
     intersection_points = []
     ip = segment_plane_intersection(tri[0], tri[1], plane)
     if ip: intersection_points.extend(ip)
@@ -118,7 +120,7 @@ def triangle_plane_intersection(tri: list[LPoint3f], plane: Plane) -> list[LPoin
     return remove_duplicate_points(intersection_points) if len(intersection_points) else None
 
 
-def remove_duplicate_points(points: list[LPoint3f]) -> list[LPoint3f]:
+def remove_duplicate_points(points: List[LPoint3f]) -> List[LPoint3f]:
     final_list = []
     for p in points:
         is_dup = any(x for x in final_list if p.almostEqual(x, EPSILON))

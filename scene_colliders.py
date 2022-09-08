@@ -1,6 +1,7 @@
 import pymunk
-from panda3d.core import GeomVertexReader, Plane, LVector3f, LPoint3f, LineSegs, NodePath
 from pymunk import Vec2d
+from panda3d.core import GeomVertexReader, Plane, LVector3f, LPoint3f, LineSegs, NodePath
+from typing import List
 
 import masks
 import utils

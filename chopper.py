@@ -1,3 +1,4 @@
+from typing import Tuple
 from direct.particles.ParticleEffect import ParticleEffect
 from panda3d.core import PointLight, LVector3, LensNode, PerspectiveLens, SamplerState, TextureStage, LQuaternionf, \
     LineSegs, NodePath, Filename
@@ -31,7 +32,7 @@ class Chopper:
     scene: "scene.Scene"
     space: pymunk.Space
 
-    def __init__(self, app, scene: "scene.Scene", spawn_point: tuple[float, float]):
+    def __init__(self, app, scene: "scene.Scene", spawn_point: Tuple[float, float]):
         width, scale = self.width, self.scale
         space = scene.space
         self.spawn_point = spawn_point

@@ -1,9 +1,10 @@
+from typing import List, Union
 from pyhocon import ConfigFactory
 
 class SceneDefinition:
     scene_cfg = None
     cutscene = False
-    spawn_point: list[float] | str = [0, 0]
+    spawn_point: Union[List[float], str] = [0, 0]
 
     def __init__(self, scene_name):
         self.scene_cfg = ConfigFactory.parse_file("./scenes/" + scene_name + "/scene.config")
