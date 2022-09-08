@@ -1,4 +1,6 @@
-from panda3d.core import PointLight, LVector3, LensNode, PerspectiveLens, SamplerState, TextureStage, LQuaternionf, LineSegs, NodePath
+from direct.particles.ParticleEffect import ParticleEffect
+from panda3d.core import PointLight, LVector3, LensNode, PerspectiveLens, SamplerState, TextureStage, LQuaternionf, \
+    LineSegs, NodePath, Filename
 import pymunk
 from input import InputManager
 from enum import Enum
@@ -7,6 +9,9 @@ from masks import CATEGORY_PLAYER, CATEGORY_WALL
 import math
 import simplepbr
 from direct.actor.Actor import Actor
+
+from direct.particles.Particles import Particles
+from direct.particles.ParticleEffect import ParticleEffect
 
 
 class Direction(Enum):
@@ -156,10 +161,35 @@ class Chopper:
 
         self.debug_line_np.hide()
 
+        # self.dust_particles = ParticleEffect()
+        # self.dust_particles.loadConfig(Filename("./art/effects/dust.ptf"))
+        # self.dust_particles.clearLight()
+        # #self.dust_particles.start(scene.app.render)
+        # self.dust_particles_active = False
+        #
+        # self.particles = Particles()
+        # self.particles.setFactory("PointParticleFactory")
+        # self.particles.setRenderer("SpriteParticleRenderer")
+        # self.particles.setEmitter("SphereVolumeEmitter")
+
+
     def velocity(self) -> float: return self.body.velocity.length
 
     def update(self, dt: float):
         im: InputManager = self.input
+
+        # ground_intersection = self.ground_intersection(15)
+        # if ground_intersection:
+        #     if not self.dust_particles_active:
+        #         self.dust_particles = ParticleEffect()
+        #         self.dust_particles.loadConfig(Filename("./art/effects/dust.ptf"))
+        #         self.dust_particles.start(self.scene.app.render)
+        #         self.dust_particles_active = True
+        #     self.dust_particles.setPos(ground_intersection.point.x, 0.000, ground_intersection.point.y)
+        # else:
+        #     if self.dust_particles_active:
+        #         self.dust_particles.softStop()
+        #     self.dust_particles_active = False
 
         if not_zero(im.throttle()):
             self.body.apply_force_at_local_point((0, 200 * im.throttle()), (0, 0))
@@ -216,6 +246,12 @@ class Chopper:
             self.flip_heading_t = move_towards(self.flip_heading_t, 1.0, 5.0, dt)
         else:
             self.bodyNode.setHpr(LVector3(90 * self.direction.value, -radians_to_degrees(rot) * self.direction.value, 0))
+
+    def ground_intersection(self, dist):
+        segment_query_info_list = self.space.segment_query((self.body.position.x, self.body.position.y), (self.body.position.x, self.body.position.y - dist), 0.1, pymunk.ShapeFilter(mask=CATEGORY_WALL))
+        segment_query_info_list.sort(key=lambda x: x.alpha)
+        if len(segment_query_info_list) == 0: return None
+        return segment_query_info_list[0]
 
     def distance_to_ground(self):
         segment_query_info_list = self.space.segment_query((self.body.position.x, self.body.position.y), (self.body.position.x, self.body.position.y - 50), 0.1, pymunk.ShapeFilter(mask=CATEGORY_WALL))
