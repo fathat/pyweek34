@@ -71,6 +71,7 @@ class Scene:
 
         self.chopper = chopper.Chopper(app, self, self.scene_definition.spawn_point)
 
+        self.fires = []
         #print(app.render.ls())  
         self.npcs = []
         x = -99

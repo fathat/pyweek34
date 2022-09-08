@@ -1,4 +1,7 @@
 import pymunk
+from direct.particles.ParticleEffect import ParticleEffect
+from panda3d.core import Filename
+
 import masks
 import utils
 
@@ -6,6 +9,7 @@ class Missile:
     def __init__(self, app, space, modelfile, pos, angle, force):
         self.space = space
         self.destroyed = False
+        self.app = app
 
         self.bodyNode = app.loader.loadModel(modelfile)
         self.bodyNode.reparentTo(app.render)
@@ -35,7 +39,17 @@ class Missile:
 
     def collision(self, other):
         self.destroyed = True
+        self.app.scene.fires.append(Fire(self.app.scene, "./art/effects/fireish.ptf", self.body.position))
         #todo hurt other
+
+
+class Fire:
+    def __init__(self, scene, particle_file, pos):
+        self.fire_particles = ParticleEffect()
+        self.fire_particles.loadConfig(Filename(particle_file))
+        self.fire_particles.clearLight()
+        self.fire_particles.start(scene.app.render)
+        self.fire_particles.setPos(pos.x, 0.000, pos.y)
 
 
 class Bullet:
