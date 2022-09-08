@@ -23,6 +23,8 @@ class Humanoid:
         self.bodyNode = Actor("art/creative-commons/Ultimate Modular Men- Feb 2022/Individual Characters/glTF/Spacesuit.gltf")
         self.bodyNode.reparentTo(base.render)
         self.bodyNode.loop("Idle")
+        self.bodyNode.setShaderAuto()
+        self.bodyNode.setTextureOff(1)
 
         poly = self.makePoly(0.36, 1.74, 10)
 

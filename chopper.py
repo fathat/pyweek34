@@ -5,6 +5,7 @@ from enum import Enum
 from utils import clamp, not_zero, radians_to_degrees, damp, move_towards, slerp, almost_zero
 from masks import CATEGORY_PLAYER, CATEGORY_WALL
 import math
+import simplepbr
 
 
 class Direction(Enum):
@@ -47,9 +48,14 @@ class Chopper:
         self.score = 0
         self.flip_heading_t = 0
         self.flip_heading = False
-        self.bodyNode = app.loader.loadModel("art/space-chopper/space-chopper.dae")
+        self.bodyNode = app.loader.loadModel("art/space-chopper/space-chopper.glb")
         self.bodyNode.setScale(scale, scale, scale)
         self.bodyNode.reparentTo(app.render)
+
+        self.bodyNode.setShaderAuto()
+        self.bodyNode.setTextureOff(1)
+        for material in self.bodyNode.findAllMaterials():
+            print(material)
 
         # self.shadowNode = self.bodyNode.attachNewNode(LensNode('shadowproj'))
         # #lens = PerspectiveLens()
@@ -198,13 +204,13 @@ class Chopper:
                 self.flip_heading = False
 
             srcRotation = LQuaternionf()
-            srcRotation.setHpr(LVector3(90 * self.direction.value, radians_to_degrees(rot) * -self.direction.value, 0))
+            srcRotation.setHpr(LVector3(90 * -self.direction.value, radians_to_degrees(rot) * self.direction.value, 0))
             targetRotation = LQuaternionf()
-            targetRotation.setHpr(LVector3(90 * -self.direction.value, radians_to_degrees(rot) * self.direction.value, 0))
-            self.bodyNode.setQuat(slerp(srcRotation, targetRotation, -self.flip_heading_t))
+            targetRotation.setHpr(LVector3(90 * self.direction.value, -radians_to_degrees(rot) * self.direction.value, 0))
+            self.bodyNode.setQuat(slerp(srcRotation, targetRotation, self.flip_heading_t))
             self.flip_heading_t = move_towards(self.flip_heading_t, 1.0, 5.0, dt)
         else:
-            self.bodyNode.setHpr(LVector3(90 * -self.direction.value, radians_to_degrees(rot) * self.direction.value, 0))
+            self.bodyNode.setHpr(LVector3(90 * self.direction.value, -radians_to_degrees(rot) * self.direction.value, 0))
 
     def distance_to_ground(self):
         segment_query_info_list = self.space.segment_query((self.body.position.x, self.body.position.y), (self.body.position.x, self.body.position.y - 50), 0.1, pymunk.ShapeFilter(mask=CATEGORY_WALL))
@@ -214,5 +220,8 @@ class Chopper:
         return (segment_query_info_list[0].point - self.body.position).length
 
     def pickup(self, human):
+        if not human:
+            print("attempting to delete null human")
+            return
         human.destroy()
         self.score += 1

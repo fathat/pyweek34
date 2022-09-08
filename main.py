@@ -63,8 +63,9 @@ class RedPlanetApp(ShowBase):
         self.camera.setPos(0, -50, 0)
         self.scene = Scene(self, 'debugscene')
 
-        materials = self.render.findAllMaterials()
-        print(materials)
+        # materials = self.render.findAllMaterials()
+        # for material in materials:
+        #     print(material)
 
         self.altText = OnscreenText(text="Altitude: ?", font=self.font, style=2, fg=(1, 1, 1, 1), bg=(0, 0, 0, 0.5), scale=.05,
                         shadow=(0, 0, 0, 1), parent=self.a2dBottomLeft,
