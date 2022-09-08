@@ -2,7 +2,7 @@ import pymunk
 import masks
 import utils
 
-class missile:
+class Missile:
     def __init__(self, app, space, modelfile, pos, angle, force):
         self.space = space
         self.destroyed = False
@@ -26,7 +26,6 @@ class missile:
 
     def update(self, dt: float):
         self.bodyNode.setPos(self.body.position.x, 0, self.body.position.y)
-        print(self.body.angle)
         self.bodyNode.setR(-(utils.radians_to_degrees(self.body.angle)))
 
     def destroy(self):
@@ -39,7 +38,7 @@ class missile:
         #todo hurt other
 
 
-class bullet:
+class Bullet:
     def __init__(self, app, space, modelfile, pos, angle, force):
         self.space = space
         self.destroyed = False

@@ -34,7 +34,7 @@ load_prc_file_data("", """
     want-directtools #f
     want-tk #f
     load-file-type p3assimp
-    model-cache-dir
+    model-cache-dir ./model-cache
     hardware-animated-vertices true
     basic-shaders-only false
 """)

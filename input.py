@@ -12,7 +12,7 @@ class InputManager:
     face_right_pressed = False
 
     fire_pressed = False
-    weap_seld = 0
+    weapon_selection = 0
 
     boost_pressed = False
     reverse_boost_pressed = False
@@ -53,8 +53,14 @@ class InputManager:
         app.accept('arrow_right', self.on_face_right, [True])
         app.accept('space-up', self.on_fire, [False])
         app.accept('space', self.on_fire, [True])
-        app.accept('1', self.on_sel_weap, [0])
-        app.accept('2', self.on_sel_weap, [1])
+        app.accept('gamepad-face_x-up', self.on_fire, [False])
+        app.accept('gamepad-face_x', self.on_fire, [True])
+        app.accept('gamepad-rshoulder-up', self.on_fire, [False])
+        app.accept('gamepad-rshoulder', self.on_fire, [True])
+        app.accept('1', self.on_select_weapon, [0])
+        app.accept('2', self.on_select_weapon, [1])
+        app.accept('gamepad-dpad_left', self.on_select_weapon, [0])
+        app.accept('gamepad-dpad_right', self.on_select_weapon, [1])
 
     def connect(self, device):
         """Event handler that is called when a device is discovered."""
@@ -65,6 +71,8 @@ class InputManager:
             print("Found %s" % (device))
             self.gamepad = device
 
+            for button in self.gamepad.buttons:
+                print(button.handle.name)
             # Enable this device to ShowBase so that we can receive events.
             # We set up the events with a prefix of "gamepad-".
             self.app.attachInputDevice(device, prefix="gamepad")
@@ -178,9 +186,6 @@ class InputManager:
     def on_fire(self, down):
         self.fire_pressed = down
 
-    def on_firon_sel_weape(self, index):
-        self.weap_seld = index
-
-    def on_sel_weap(self, index):
-        self.weap_seld = index
+    def on_select_weapon(self, index):
+        self.weapon_selection = index
 

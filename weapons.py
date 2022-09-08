@@ -1,7 +1,9 @@
 import projectile
 import objects
+import utils
 
-class rocket_launcher:
+
+class RocketLauncher:
     def __init__(self, app, space):
         self.app = app
         self.space = space
@@ -12,14 +14,18 @@ class rocket_launcher:
         if self.fire_timer < self.fire_rate:
             self.fire_timer += dt
 
-    def fire(self, body):
+    def fire(self, body, direction: utils.Direction):
         if self.fire_timer >= self.fire_rate:
             self.fire_timer = 0.0
-            firespot = body.local_to_world((0,-3))
-            objects.objects.append(projectile.missile(self.app, self.space, "models/missile.stl", firespot, body.angle, 1000))
+            firespot = body.local_to_world((4 * direction.value, 0))
+            objects.objects.append(
+                projectile.Missile(
+                    self.app, self.space, "models/missile.stl", firespot, body.angle, 1000 * direction.value
+                )
+            )
 
 
-class machine_gun:
+class MachineGun:
     def __init__(self, app, space):
         self.app = app
         self.space = space
@@ -30,8 +36,12 @@ class machine_gun:
         if self.fire_timer < self.fire_rate:
             self.fire_timer += dt
 
-    def fire(self, body):
+    def fire(self, body, direction: utils.Direction):
         if self.fire_timer >= self.fire_rate:
             self.fire_timer = 0.0
-            firespot = body.local_to_world((4,0))
-            objects.objects.append(projectile.bullet(self.app, self.space, "models/bullet.stl", firespot, body.angle, 1000))
+            firespot = body.local_to_world((4 * direction.value,0))
+            objects.objects.append(
+                projectile.Bullet(
+                    self.app, self.space, "models/bullet.stl", firespot, body.angle, 1000 * direction.value
+                )
+            )

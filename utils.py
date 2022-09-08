@@ -1,7 +1,21 @@
 import math
 from panda3d.core import Plane, LPoint3f
+from enum import Enum
 
 EPSILON = 0.0001
+
+
+class Direction(Enum):
+    LEFT = -1
+    RIGHT = 1
+
+
+def opposite_direction(d: Direction):
+    if d == Direction.LEFT:
+        return Direction.RIGHT
+    else:
+        return Direction.LEFT
+
 
 def degrees_to_radians(deg: float):
     return deg * (math.pi/180.0)

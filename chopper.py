@@ -3,8 +3,7 @@ from panda3d.core import PointLight, LVector3, LensNode, PerspectiveLens, Sample
     LineSegs, NodePath, Filename
 import pymunk
 from input import InputManager
-from enum import Enum
-from utils import clamp, not_zero, radians_to_degrees, damp, move_towards, slerp, almost_zero
+from utils import clamp, not_zero, radians_to_degrees, damp, move_towards, slerp, almost_zero, Direction
 from masks import CATEGORY_PLAYER, CATEGORY_WALL
 import math
 import simplepbr
@@ -13,19 +12,6 @@ import weapons
 
 from direct.particles.Particles import Particles
 from direct.particles.ParticleEffect import ParticleEffect
-
-
-class Direction(Enum):
-    LEFT = -1
-    RIGHT = 1
-
-
-def opposite_direction(d: Direction):
-    if d == Direction.LEFT:
-        return Direction.RIGHT
-    else:
-        return Direction.LEFT
-
 
 class Chopper:
     width: float = 3.2
@@ -143,7 +129,7 @@ class Chopper:
         
         space.add(self.body, hull_shape, skid_shape, rotor_shape)
 
-        self.weapons = [weapons.machine_gun(app, space), weapons.rocket_launcher(app, space)]
+        self.weapons = [weapons.MachineGun(app, space), weapons.RocketLauncher(app, space)]
         
         self.debug_lines = LineSegs()
         self.debug_lines.setColor(1, 0, 0, 1)
@@ -215,20 +201,19 @@ class Chopper:
             self.flip_heading_t = 0
             self.flip_heading = True
 
-        self.weapons[im.weap_seld].update(dt)
+        self.weapons[im.weapon_selection].update(dt)
 
         if im.fire_pressed:
-            self.weapons[im.weap_seld].fire(self.body)
+            self.weapons[im.weapon_selection].fire(self.body, self.direction)
 
         if not_zero(im.pitch_axis()):
             self.body.apply_force_at_world_point((10 * im.pitch_axis(), 0), (self.body.position.x, self.body.position.y))
             self.body.apply_force_at_local_point((0, 200 * im.pitch_axis()), (-self.width, 0))
             self.body.apply_force_at_local_point((0, -200 * im.pitch_axis()), (self.width, 0))
 
-        damping_rate = 1.0 - clamp(self.velocity() / 100, 0, 1)
-        self.body.velocity = damp(self.body.velocity, damping_rate, dt)
+        #damping_rate = 1.0 - clamp(self.velocity() / 100, 0, 1)
+        #self.body.velocity = damp(self.body.velocity, damping_rate, dt)
         self.body.angular_velocity = damp(self.body.angular_velocity, 0.15, dt)
-                
 
         self.pos = self.body.position
         rot = self.body.angle
@@ -247,11 +232,11 @@ class Chopper:
                 self.flip_heading_t = 1.0
                 self.flip_heading = False
 
-            srcRotation = LQuaternionf()
-            srcRotation.setHpr(LVector3(90 * -self.direction.value, radians_to_degrees(rot) * self.direction.value, 0))
-            targetRotation = LQuaternionf()
-            targetRotation.setHpr(LVector3(90 * self.direction.value, -radians_to_degrees(rot) * self.direction.value, 0))
-            self.bodyNode.setQuat(slerp(srcRotation, targetRotation, self.flip_heading_t))
+            src_rotation = LQuaternionf()
+            src_rotation.setHpr(LVector3(90 * -self.direction.value, radians_to_degrees(rot) * self.direction.value, 0))
+            target_rotation = LQuaternionf()
+            target_rotation.setHpr(LVector3(90 * self.direction.value, -radians_to_degrees(rot) * self.direction.value, 0))
+            self.bodyNode.setQuat(slerp(src_rotation, target_rotation, self.flip_heading_t))
             self.flip_heading_t = move_towards(self.flip_heading_t, 1.0, 5.0, dt)
         else:
             self.bodyNode.setHpr(LVector3(90 * self.direction.value, -radians_to_degrees(rot) * self.direction.value, 0))
