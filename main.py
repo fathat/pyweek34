@@ -45,7 +45,7 @@ class RedPlanetApp(ShowBase):
 
     def __init__(self):
         ShowBase.__init__(self)
-
+        self.pushBias = 0.04
         self.font = self.loader.loadFont("art/fonts/bedstead/bedstead.otf")
         
         ambientLight = AmbientLight("ambient light")
@@ -62,6 +62,7 @@ class RedPlanetApp(ShowBase):
         self.camLens.set_near_far(1, 10000)
         self.camera.setPos(0, -50, 0)
         self.scene = Scene(self, 'debugscene')
+        self.render.setShaderInput('push', self.pushBias)
 
         # materials = self.render.findAllMaterials()
         # for material in materials:
@@ -89,7 +90,7 @@ class RedPlanetApp(ShowBase):
         self.scene.update(self.clock.dt)
         self.altText.setText("Altitude: " + str(int(self.scene.chopper.pos.y)) + "m")
         self.speedText.setText(f"Speed: {int(self.scene.chopper.velocity())}")
-        self.d2gText.setText(f"Distance To Ground: {int(self.scene.chopper.distance_to_ground())}")
+        self.d2gText.setText(f"Distance To Ground: {int(self.scene.chopper.distance_to_ground)}")
         #self.skidText.setText(f"Skid: {int(self.scene.chopper.skid_body.position.x)}, {int(self.scene.chopper.skid_body.position.y)}")
 
         return Task.cont

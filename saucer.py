@@ -4,7 +4,6 @@ import math
 import masks
 import utils
 import weapons
-from panda3d.core import AmbientLight, Vec4, Material
 from direct.actor.Actor import Actor
 from enum import Enum, auto
 
@@ -15,14 +14,14 @@ class State(Enum):
     WAVE = auto()
 
 class Saucer:
-    def __init__(self, base, space):
+    def __init__(self, scene: "scene.Scene"):
         self.target = None
-        self.space = space
+        self.space = scene.space
         self.destroyed = False
 
         self.state = State.IDLE
         self.bodyNode = Actor("models/Saucer.stl")
-        self.bodyNode.reparentTo(base.render)
+        self.bodyNode.reparentTo(scene.root)
 
         poly = ((-5,-1.25),(5,-1.25),(0,3))
 
@@ -32,9 +31,9 @@ class Saucer:
         self.shape.filter = pymunk.ShapeFilter(categories=masks.CATEGORY_ENEMY)
         self.shape.collision_type = masks.CATEGORY_ENEMY
         self.shape.data = self
-        space.add(self.body, self.shape)
+        scene.space.add(self.body, self.shape)
 
-        self.weapon = weapons.AlienMachineGun(base, space)
+        self.weapon = weapons.AlienMachineGun(scene)
 
     def destroy(self):
         self.shape.data = None

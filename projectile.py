@@ -5,6 +5,7 @@ from panda3d.core import Filename
 import masks
 import utils
 
+
 class Projectile:
     def inflict_pain(self, other, amount):
         if hasattr(other, "hurt"):
@@ -12,13 +13,13 @@ class Projectile:
 
 
 class Missile(Projectile):
-    def __init__(self, app, space, modelfile, pos, angle, force):
-        self.space = space
+    def __init__(self, scene, model_filename, pos, angle, force):
+        self.scene = scene
+        self.space = scene.space
         self.destroyed = False
-        self.app = app
 
-        self.bodyNode = app.loader.loadModel(modelfile)
-        self.bodyNode.reparentTo(app.render)
+        self.bodyNode = scene.app.loader.loadModel(model_filename)
+        self.bodyNode.reparentTo(scene.app.render)
 
         self.body = pymunk.Body(10, 100)
         self.body.position = pos
@@ -30,7 +31,7 @@ class Missile(Projectile):
         self.shape.filter = pymunk.ShapeFilter(categories=masks.CATEGORY_PROJECTILE)
         self.shape.collision_type = masks.CATEGORY_PROJECTILE
         self.shape.data = self
-        space.add(self.body, self.shape)
+        self.space.add(self.body, self.shape)
 
         self.body.apply_impulse_at_local_point((force, 0), (0, 0))
 
@@ -46,7 +47,7 @@ class Missile(Projectile):
     def collision(self, other):
         self.destroyed = True
         self.inflict_pain(other, 10)
-        self.app.scene.fires.append(Fire(self.app.scene, "./art/effects/fireish.ptf", self.body.position))
+        self.scene.fires.append(Fire(self.scene, "./art/effects/fireish.ptf", self.body.position))
         #todo hurt other
 
 
@@ -60,12 +61,12 @@ class Fire:
 
 
 class Bullet(Projectile):
-    def __init__(self, app, space, modelfile, pos, angle, force):
-        self.space = space
+    def __init__(self, scene, model_filename, pos, angle, force):
+        self.space = scene.space
         self.destroyed = False
 
-        self.bodyNode = app.loader.loadModel(modelfile)
-        self.bodyNode.reparentTo(app.render)
+        self.bodyNode = scene.app.loader.loadModel(model_filename)
+        self.bodyNode.reparentTo(scene.root)
 
         self.body = pymunk.Body(10, 100)
         self.body.position = pos
@@ -76,7 +77,7 @@ class Bullet(Projectile):
         self.shape.filter = pymunk.ShapeFilter(categories=masks.CATEGORY_PROJECTILE)
         self.shape.collision_type = masks.CATEGORY_PROJECTILE
         self.shape.data = self
-        space.add(self.body, self.shape)
+        scene.space.add(self.body, self.shape)
 
         self.body.apply_impulse_at_local_point((force, 0), (0, 0))
 

@@ -7,7 +7,6 @@ from pymunk import Vec2d
 
 import masks
 import utils
-import objects
 import distributorOfPain
 from scene_colliders import add_node_path_as_collider
 from scene_definition import SceneDefinition
@@ -16,39 +15,45 @@ pymunk_step = 1.0/120.0
 
 
 class Scene:
-    
+    root: NodePath = None
     space: pymunk.Space = None
     world: ModelNode
     camera_fov: float = 35
 
     def __init__(self, app, name):
-
-        self.scene_definition = SceneDefinition(name)
+        self.definition = SceneDefinition(name)
+        self.root = NodePath("Scene Root")
+        self.root.reparentTo(app.render)
         self.app = app
         self.space = pymunk.Space()
-        self.space.gravity = (0.0, self.scene_definition.gravity)
+        self.space.gravity = (0.0, self.definition.gravity)
         distributorOfPain.init(self.space)
         self.pymunk_timer = 0.0
         self.camera_fov = 35
         self.cam_dist = -80
        
-        color = tuple(self.scene_definition.background_color)
+        color = tuple(self.definition.background_color)
         expfog = Fog("Fog")
-        expfog.setExpDensity(self.scene_definition.fog_density)
+        expfog.setExpDensity(self.definition.fog_density)
         expfog.setColor(*color)
         app.setBackgroundColor(*color)
 
-        self.world = app.loader.loadModel(self.scene_definition.world_mesh)
+        self.world = app.loader.loadModel(self.definition.world_mesh)
         self.worldNP = NodePath(self.world)
-        self.worldNP.reparentTo(self.app.render)
+        self.worldNP.reparentTo(self.root)
         self.worldNP.setFog(expfog)
         self.worldNP.setShaderAuto()
-        self.worldNP.setTextureOff(1)
+
+        if self.definition.texture_hack:
+            self.worldNP.setTextureOff(1)
+
+        # need to set a depth offset or we get shadow acne
+        self.worldNP.setDepthOffset(-2)
         
         self.sun = DirectionalLight('Sun')
-        self.sun.setColor(LVector3(*tuple(self.scene_definition.sun_color)) * 0.5)
+        self.sun.setColor(LVector3(*tuple(self.definition.sun_color)) * 0.5)
         self.sun.getLens().setFilmSize(400, 200)
-        self.sun.getLens().setNearFar(0.5, 500)
+        self.sun.getLens().setNearFar(1, 400)
         self.sun.setShadowCaster(True, 2048, 2048)
         self.sun.setCameraMask(masks.SUN_SHADOW_CAMERA_MASK)
         self.sunNP = app.render.attachNewNode(self.sun)
@@ -60,32 +65,33 @@ class Scene:
         print("Shadow buffer size", self.sun.getShadowBufferSize())
 
         self.extraSun = DirectionalLight('Extra Sun')
-        self.extraSun.setColor(LVector3(*tuple(self.scene_definition.sun_color)))   
+        self.extraSun.setColor(LVector3(*tuple(self.definition.sun_color)))
         self.extraSun.setDirection(LVector3(0.5, 1, -0.5).normalized())
         self.extraSunNP = app.render.attachNewNode(self.extraSun)
-        self.extraSunNP.reparentTo(self.app.render)
+        self.extraSunNP.reparentTo(self.root)
         self.app.render.setLight(self.extraSunNP)
 
-        self.collisionDebugNP = app.render.attachNewNode("Collision Lines")
+        self.collisionDebugNP = self.root.attachNewNode("Collision Lines")
         self.collisionDebugNP.hide(masks.SUN_SHADOW_CAMERA_MASK)
         self.collisionDebugNP.clearShader()
         add_node_path_as_collider(self.world, self.worldNP, self.space, self.collisionDebugNP)
 
-        self.chopper = chopper.Chopper(app, self, self.scene_definition.spawn_point)
+        self.chopper = chopper.Chopper(self, self.definition.spawn_point)
 
+        self.objects = []
         self.fires = []
-        #print(app.render.ls())  
+
         x = -99
         for i in range(0, 10):
             human = humanoid.Humanoid(app, self.space)
             human.target = self.chopper
             human.setPos(x, 20)
             x += 20
-            objects.objects.append(human)
+            self.objects.append(human)
 
-        enemy = saucer.Saucer(app, self.space)
-        objects.objects.append(enemy)
-        enemy.setPos(self.scene_definition.spawn_point[0] + 50, self.scene_definition.spawn_point[1]+ 20)
+        enemy = saucer.Saucer(self)
+        self.objects.append(enemy)
+        enemy.setPos(self.definition.spawn_point[0] + 50, self.definition.spawn_point[1] + 20)
         enemy.target = self.chopper
 
     def update(self, dt):
@@ -96,12 +102,12 @@ class Scene:
             self.space.step(pymunk_step)
             self.chopper.update(pymunk_step)
 
-            for i in range(len(objects.objects) - 1, -1, -1):
-                if objects.objects[i].destroyed:
-                    objects.objects[i].destroy()
-                    objects.objects.pop(i)
+            for i in range(len(self.objects) - 1, -1, -1):
+                if self.objects[i].destroyed:
+                    self.objects[i].destroy()
+                    self.objects.pop(i)
                 else:
-                    objects.objects[i].update(pymunk_step)
+                    self.objects[i].update(pymunk_step)
             
             self.sunNP.setPos(self.chopper.pos.x, 0, self.chopper.pos.y + 250)
             

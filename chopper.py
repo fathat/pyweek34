@@ -1,20 +1,16 @@
 from typing import Tuple
-from direct.particles.ParticleEffect import ParticleEffect
-from panda3d.core import PointLight, LVector3, LensNode, PerspectiveLens, SamplerState, TextureStage, LQuaternionf, \
-    LineSegs, NodePath, Filename
+from panda3d.core import LVector3, LQuaternionf, LineSegs, NodePath
+from direct.actor.Actor import Actor
 import pymunk
 from input import InputManager
 from utils import clamp, not_zero, radians_to_degrees, damp, move_towards, slerp, almost_zero, Direction
 from masks import CATEGORY_PLAYER, CATEGORY_WALL
 import math
-import simplepbr
-from direct.actor.Actor import Actor
+
 import weapons
 import masks
 import utils
 
-from direct.particles.Particles import Particles
-from direct.particles.ParticleEffect import ParticleEffect
 
 class Chopper:
     width: float = 3.2
@@ -34,19 +30,20 @@ class Chopper:
     scene: "scene.Scene"
     space: pymunk.Space
 
-    def __init__(self, app, scene: "scene.Scene", spawn_point: Tuple[float, float]):
+    def __init__(self, scene: "scene.Scene", spawn_point: Tuple[float, float]):
         width, scale = self.width, self.scale
         space = scene.space
         self.spawn_point = spawn_point
+        self.distance_to_ground = -1
         self.scene = scene
         self.space = space
-        self.app = app
-        self.input = app.input
+        self.app = scene.app
+        self.input = scene.app.input
         self.score = 0
         self.flip_heading_t = 0
         self.flip_heading = False
         self.bodyNode = Actor("art/space-chopper/space-chopper.glb")
-        self.bodyNode.reparentTo(app.render)
+        self.bodyNode.reparentTo(scene.root)
         self.bodyNode.loop("blade")
 
         self.bodyNode.setShaderAuto()
@@ -132,7 +129,7 @@ class Chopper:
         
         space.add(self.body, hull_shape, skid_shape, rotor_shape)
 
-        self.weapons = [weapons.MachineGun(app, space), weapons.RocketLauncher(app, space)]
+        self.weapons = [weapons.MachineGun(self.scene), weapons.RocketLauncher(self.scene)]
         
         self.debug_lines = LineSegs()
         self.debug_lines.setColor(1, 0, 0, 1)
@@ -165,8 +162,8 @@ class Chopper:
         # self.particles.setRenderer("SpriteParticleRenderer")
         # self.particles.setEmitter("SphereVolumeEmitter")
 
-
-    def velocity(self) -> float: return self.body.velocity.length
+    def velocity(self) -> float:
+        return self.body.velocity.length
 
     def update(self, dt: float):
         im: InputManager = self.input
@@ -234,6 +231,8 @@ class Chopper:
 
         self.bodyNode.setPos(self.pos.x, 0, self.pos.y)
 
+        self.distance_to_ground = self.calculate_distance_to_ground()
+
         if self.flip_heading:
             if self.flip_heading_t >= 1.0:
                 self.flip_heading_t = 1.0
@@ -254,8 +253,8 @@ class Chopper:
         if len(segment_query_info_list) == 0: return None
         return segment_query_info_list[0]
 
-    def distance_to_ground(self):
-        segment_query_info_list = self.space.segment_query((self.body.position.x, self.body.position.y), (self.body.position.x, self.body.position.y - 50), 0.1, pymunk.ShapeFilter(mask=CATEGORY_WALL))
+    def calculate_distance_to_ground(self):
+        segment_query_info_list = self.space.segment_query((self.body.position.x, self.body.position.y), (self.body.position.x, self.body.position.y - 200), 0.1, pymunk.ShapeFilter(mask=CATEGORY_WALL))
         segment_query_info_list.sort(key=lambda x: x.alpha)
         if len(segment_query_info_list) == 0: return -1
         if almost_zero(segment_query_info_list[0].alpha): return 0
