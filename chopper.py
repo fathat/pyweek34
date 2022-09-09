@@ -23,7 +23,7 @@ class Chopper:
     hull_floor: float = -1.0
 
     skid_floor: float = -1.5
-    skid_height: float = 0.25
+    skid_height: float = 0.5
 
     rotor_floor: float = 1.5
     rotor_height: float = 0.25
