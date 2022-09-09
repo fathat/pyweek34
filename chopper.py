@@ -204,6 +204,10 @@ class Chopper:
             self.flip_heading_t = 0
             self.flip_heading = True
 
+        if im.chopper_reset:
+            im.chopper_reset = False
+            self.reset()
+
         self.weapons[im.weapon_selection].update(dt)
 
         if im.fire_pressed:
@@ -264,5 +268,8 @@ class Chopper:
         elif other.shape.collision_type == masks.CATEGORY_WALL:
             angle = utils.normalizeAngle(self.body.angle, 0.0)
             if abs(angle) > math.pi * 0.66:
-                self.body.position = self.spawn_point
-                self.body.angle = 0
+                self.reset()
+
+    def reset(self):
+        self.body.position = self.spawn_point
+        self.body.angle = 0
