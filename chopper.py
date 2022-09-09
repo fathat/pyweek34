@@ -10,6 +10,8 @@ import math
 import simplepbr
 from direct.actor.Actor import Actor
 import weapons
+import masks
+import utils
 
 from direct.particles.Particles import Particles
 from direct.particles.ParticleEffect import ParticleEffect
@@ -255,9 +257,12 @@ class Chopper:
         if almost_zero(segment_query_info_list[0].alpha): return 0
         return (segment_query_info_list[0].point - self.body.position).length
 
-    def pickup(self, human):
-        if not human:
-            print("attempting to delete null human")
-            return
-        human.destroyed = True
-        self.score += 1
+    def collision(self, other):
+        if other.shape.collision_type == masks.CATEGORY_HUMANOID:
+            other.destroyed = True
+            self.score += 1
+        elif other.shape.collision_type == masks.CATEGORY_WALL:
+            angle = utils.normalizeAngle(self.body.angle, 0.0)
+            if abs(angle) > math.pi * 0.66:
+                self.body.position = self.spawn_point
+                self.body.angle = 0

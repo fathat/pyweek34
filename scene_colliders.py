@@ -56,6 +56,10 @@ def process_vertex_data(vdata):
         t = texcoord.getData2()
         print("v = %s, t = %s" % (repr(v), repr(t)))
 
+class Wall:
+    def __init__(self):
+        self.shape = None
+
 def create_segments(transformed_triangle, physics_plane, space, render):
     segments = utils.triangle_plane_intersection(transformed_triangle, physics_plane)
     if segments and len(segments) > 1: 
@@ -68,7 +72,10 @@ def create_segments(transformed_triangle, physics_plane, space, render):
             shape.friction = 1.0
             shape.collision_type = masks.CATEGORY_WALL
             shape.filter = pymunk.ShapeFilter(categories=masks.CATEGORY_WALL)
-            shape.data = None
+            
+            temp = Wall()
+            temp.shape = shape
+            shape.data = temp
             space.add(shape)
 
             if render:

@@ -132,3 +132,7 @@ def remove_duplicate_points(points: List[LPoint3f]) -> List[LPoint3f]:
 def firstorder_lowpass(prev, curr, dt, tau):
     alpha = 1.0 - math.exp(-dt / tau)
     return prev + alpha * (curr - prev)
+
+def normalizeAngle(a, center):
+    TWO_PI = math.pi * 2
+    return a - TWO_PI * math.floor((a + math.pi - center) / TWO_PI)
