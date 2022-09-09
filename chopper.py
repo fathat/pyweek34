@@ -259,5 +259,5 @@ class Chopper:
         if not human:
             print("attempting to delete null human")
             return
-        human.destroy()
+        human.destroyed = True
         self.score += 1

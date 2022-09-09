@@ -73,14 +73,13 @@ class Scene:
 
         self.fires = []
         #print(app.render.ls())  
-        self.npcs = []
         x = -99
         for i in range(0, 10):
             human = humanoid.Humanoid(app, self.space)
             human.target = self.chopper
             human.setPos(x, 20)
             x += 20
-            self.npcs.append(human)
+            objects.objects.append(human)
 
     def update(self, dt):
         self.pymunk_timer += dt
@@ -89,12 +88,6 @@ class Scene:
             self.pymunk_timer -= pymunk_step
             self.space.step(pymunk_step)
             self.chopper.update(pymunk_step)
-
-            for i in range(len(self.npcs) - 1, -1, -1):
-                if self.npcs[i].destroyed:
-                    self.npcs.pop(i)
-                else:
-                    self.npcs[i].update(pymunk_step)
 
             for i in range(len(objects.objects) - 1, -1, -1):
                 if objects.objects[i].destroyed:

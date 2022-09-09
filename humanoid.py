@@ -38,7 +38,6 @@ class Humanoid:
         space.add(self.body, self.shape)
 
     def destroy(self):
-        self.destroyed = True
         self.shape.data = None
         self.space.remove(self.body, self.shape)
         self.bodyNode.cleanup()
