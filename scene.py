@@ -1,6 +1,7 @@
 from panda3d.core import *
 import chopper
 import humanoid
+import saucer
 import pymunk
 from pymunk import Vec2d
 
@@ -80,6 +81,11 @@ class Scene:
             human.setPos(x, 20)
             x += 20
             objects.objects.append(human)
+
+        enemy = saucer.Saucer(app, self.space)
+        objects.objects.append(enemy)
+        enemy.setPos(self.scene_definition.spawn_point[0] + 50, self.scene_definition.spawn_point[1]+ 20)
+        enemy.target = self.chopper
 
     def update(self, dt):
         self.pymunk_timer += dt
