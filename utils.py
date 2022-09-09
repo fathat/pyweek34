@@ -1,8 +1,9 @@
 import math
 from enum import Enum
 from typing import List, Optional
-from panda3d.core import Plane, LPoint3f
 
+from direct.showbase.ShowBaseGlobal import render2d, aspect2d
+from panda3d.core import Plane, LPoint3f, Camera, NodePath, Point2, Point3
 
 EPSILON = 0.0001
 
@@ -132,3 +133,12 @@ def remove_duplicate_points(points: List[LPoint3f]) -> List[LPoint3f]:
 def firstorder_lowpass(prev, curr, dt, tau):
     alpha = 1.0 - math.exp(-dt / tau)
     return prev + alpha * (curr - prev)
+
+
+def node_coord_in_2d(nodePath: NodePath, cam: Camera):
+    coord3d = nodePath.getPos(cam)
+    coord2d = Point2()
+    cam.getLens().project(coord3d, coord2d)
+    coord_in_render2d = Point3(coord2d[0], 0, coord2d[1])
+    coord_in_aspect2d = aspect2d.getRelativePoint(render2d, coord_in_render2d)
+    return coord_in_aspect2d
