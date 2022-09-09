@@ -5,7 +5,13 @@ from panda3d.core import Filename
 import masks
 import utils
 
-class Missile:
+class Projectile:
+    def inflict_pain(self, other, amount):
+        if hasattr(other, "hurt"):
+            other.hurt(amount)
+
+
+class Missile(Projectile):
     def __init__(self, app, space, modelfile, pos, angle, force):
         self.space = space
         self.destroyed = False
@@ -39,6 +45,7 @@ class Missile:
 
     def collision(self, other):
         self.destroyed = True
+        self.inflict_pain(other, 10)
         self.app.scene.fires.append(Fire(self.app.scene, "./art/effects/fireish.ptf", self.body.position))
         #todo hurt other
 
@@ -52,7 +59,7 @@ class Fire:
         self.fire_particles.setPos(pos.x, 0.000, pos.y)
 
 
-class Bullet:
+class Bullet(Projectile):
     def __init__(self, app, space, modelfile, pos, angle, force):
         self.space = space
         self.destroyed = False
@@ -84,4 +91,4 @@ class Bullet:
 
     def collision(self, other):
         self.destroyed = True
-        #todo hurt other
+        self.inflict_pain(other, 10)

@@ -85,3 +85,6 @@ class Saucer:
 
     def setPos(self, x, y):
         self.body.position = x, y
+
+    def hurt(self, damage):
+        self.destroyed = True
