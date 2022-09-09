@@ -74,9 +74,9 @@ class Saucer:
             self.body.apply_force_at_local_point((50, 0), (5,0))
 
         #fire!
-        if dist.x < 100:
+        if dist.x > 0 and dist.x < 100:
             self.weapon.fire(self.body, utils.Direction.LEFT)
-        elif dist.x > -100:
+        elif dist.x < 0 and dist.x > -100:
             self.weapon.fire(self.body, utils.Direction.RIGHT)
 
 
