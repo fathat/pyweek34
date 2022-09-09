@@ -14,6 +14,8 @@ class InputManager:
     fire_pressed = False
     weapon_selection = 0
 
+    chopper_reset = False
+
     boost_pressed = False
     reverse_boost_pressed = False
 
@@ -61,6 +63,7 @@ class InputManager:
         app.accept('2', self.on_select_weapon, [1])
         app.accept('gamepad-dpad_left', self.on_select_weapon, [0])
         app.accept('gamepad-dpad_right', self.on_select_weapon, [1])
+        app.accept('0-up', self.on_choppa_reset, [False])
 
     def connect(self, device):
         """Event handler that is called when a device is discovered."""
@@ -188,4 +191,7 @@ class InputManager:
 
     def on_select_weapon(self, index):
         self.weapon_selection = index
+
+    def on_choppa_reset(self, down):
+        self.chopper_reset = True
 

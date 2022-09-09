@@ -1,6 +1,7 @@
 from panda3d.core import *
 import chopper
 import humanoid
+import saucer
 import pymunk
 from pymunk import Vec2d
 
@@ -42,12 +43,13 @@ class Scene:
         self.worldNP.reparentTo(self.app.render)
         self.worldNP.setFog(expfog)
         self.worldNP.setShaderAuto()
+        self.worldNP.setTextureOff(1)
         
         self.sun = DirectionalLight('Sun')
         self.sun.setColor(LVector3(*tuple(self.scene_definition.sun_color)) * 0.5)
         self.sun.getLens().setFilmSize(400, 200)
-        self.sun.getLens().setNearFar(0.1, 500)
-        self.sun.setShadowCaster(True, 4096, 4096)
+        self.sun.getLens().setNearFar(0.5, 500)
+        self.sun.setShadowCaster(True, 2048, 2048)
         self.sun.setCameraMask(masks.SUN_SHADOW_CAMERA_MASK)
         self.sunNP = app.render.attachNewNode(self.sun)
         self.sunNP.reparentTo(self.app.render)
@@ -80,6 +82,11 @@ class Scene:
             human.setPos(x, 20)
             x += 20
             objects.objects.append(human)
+
+        enemy = saucer.Saucer(app, self.space)
+        objects.objects.append(enemy)
+        enemy.setPos(self.scene_definition.spawn_point[0] + 50, self.scene_definition.spawn_point[1]+ 20)
+        enemy.target = self.chopper
 
     def update(self, dt):
         self.pymunk_timer += dt

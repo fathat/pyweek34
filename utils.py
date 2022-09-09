@@ -135,6 +135,11 @@ def firstorder_lowpass(prev, curr, dt, tau):
     return prev + alpha * (curr - prev)
 
 
+def normalizeAngle(a, center):
+    TWO_PI = math.pi * 2
+    return a - TWO_PI * math.floor((a + math.pi - center) / TWO_PI)
+
+
 def node_coord_in_2d(nodePath: NodePath, cam: Camera):
     coord3d = nodePath.getPos(cam)
     coord2d = Point2()
