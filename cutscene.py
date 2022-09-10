@@ -9,7 +9,7 @@ class CutScene:
         self.show_hud = False
 
     def update(self, dt):
-        if self.counter < 1:
+        if self.counter < 0.15:
             self.counter += dt
         elif self.app.input.action:
             return True

@@ -11,6 +11,7 @@ from pymunk import Vec2d
 import masks
 import utils
 import distributorOfPain
+from buildings import make_building
 from scene_colliders import add_node_path_as_collider
 from scene_definition import SceneDefinition
 
@@ -88,15 +89,19 @@ class Scene:
         self.collisionDebugNP = self.root.attachNewNode("Collision Lines")
         self.collisionDebugNP.hide(masks.SUN_SHADOW_CAMERA_MASK)
         self.collisionDebugNP.clearShader()
-        add_node_path_as_collider(self.world, self.worldNP, self.space, self.collisionDebugNP)
+        add_node_path_as_collider(self.worldNP, self.space, self.collisionDebugNP)
         #add_node_path_as_collider(self.world, self.worldNP, self.space, None)
 
         self.chopper = chopper.Chopper(self, self.definition.spawn_point)
 
         self.objects = []
         self.fires = []
+        self.buildings = []
 
-        #setup conditions
+        for building_definition in self.definition.buildings:
+            self.buildings.append(make_building(self, building_definition))
+
+        # setup conditions
         if self.definition.objective == "rescue":
             enemy = saucer.Saucer(self)
             self.objects.append(enemy)

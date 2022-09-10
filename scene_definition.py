@@ -2,6 +2,15 @@ from typing import List, Union
 from pyhocon import ConfigFactory
 import random
 
+
+class BuildingDefinition:
+    def __init__(self, d_node):
+        self.model = d_node.get("model")
+        self.pos = d_node.get("pos")
+        self.hpr = d_node.get("hpr")
+        self.type = d_node.get("type")
+
+
 class SceneDefinition:
     scene_cfg = None
     cutscene = False
@@ -25,6 +34,10 @@ class SceneDefinition:
         self.civilian_models = self.scene_cfg.get('civilian_models', 0)
         self.num_civilians = self.scene_cfg.get_int('num_civilians', 40)
         self.num_saucers = self.scene_cfg.get_int('num_saucers', 0)
+        buildings = self.scene_cfg.get("buildings", [])
+        self.buildings = []
+        for building in buildings:
+            self.buildings.append(BuildingDefinition(building))
 
     def random_civ_model(self):
         return random.choice(self.civilian_models)
