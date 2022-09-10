@@ -1,4 +1,5 @@
 image art/Title.png
+image art/Level1.png
 level debugscene
 image art/Win.png
 
