@@ -11,6 +11,7 @@ class Building:
         self.node_path.reparentTo(scene.root)
         self.node_path.setPos(*tuple(definition.pos))
         self.node_path.setHpr(*tuple(definition.hpr))
+        self.node_path.setShaderAuto()
         add_node_path_as_collider(self.node_path, self.scene.space, self.scene.collisionDebugNP)
 
 

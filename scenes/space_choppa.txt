@@ -6,6 +6,7 @@ image art/intro/page-4.png
 image art/intro/page-5.png
 image art/intro/page-6.png
 image art/intro/page-7.png
+image art/intro/page-7_5.png
 image art/intro/page-8.png
 level debugscene
 image art/intro/mid-1.png
