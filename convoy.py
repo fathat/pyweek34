@@ -20,7 +20,7 @@ class Convoy:
         self.destroyed = False
         self.hp = 10
 
-        self.bodyNode = Actor("models/truck.stl")
+        self.bodyNode = Actor("models/truck.dae")
         self.bodyNode.reparentTo(scene.root)
 
         self.body = pymunk.Body(10, 100)
