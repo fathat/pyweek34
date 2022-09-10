@@ -102,42 +102,49 @@ class Scene:
         for building_definition in self.definition.buildings:
             self.buildings.append(make_building(self, building_definition))
 
+        #add stuff to the level
+        for i in range(self.definition.num_saucers):
+            enemy = saucer.Saucer(self)
+            x = random.random() * 1000 - 500
+            y = self.get_height_at(x) + 10 + random.random() * 25
+
+            if abs(x - self.definition.spawn_point[0]) < 100:
+                if x > self.definition.spawn_point[0]:
+                    x += 100
+                else:
+                    x -= 100
+
+            enemy.setPos(x, y)
+            enemy.target = self.chopper
+            self.objects.append(enemy)
+
+        for i in range(self.definition.num_civilians):
+            human = humanoid.Humanoid(self)
+            human.target = self.chopper
+            x = random.random() * 1000 - 500
+            y = self.get_height_at(x) + 2
+
+            if abs(x - self.definition.spawn_point[0]) < 35:
+                if x > self.definition.spawn_point[0]:
+                    x += 100
+                else:
+                    x -= 100
+
+            human.setPos(x, y)
+            self.objects.append(human)
+
         # setup conditions
         if self.definition.objective == "rescue":
-            enemy = saucer.Saucer(self)
-            self.objects.append(enemy)
-            enemy.setPos(self.definition.spawn_point[0] + 50, self.definition.spawn_point[1] + 20)
-            enemy.target = self.chopper
+            pass
 
-            for i in range(self.definition.num_civilians):
-                human = humanoid.Humanoid(self)
-                human.target = self.chopper
-                x = random.random() * 1000 - 500
-                y = self.get_height_at(x) + 2
-                human.setPos(x, y)
-                self.objects.append(human)
         elif self.definition.objective == "escort":
             self.convoy = convoy.Convoy(self)
             self.convoy.target = self.chopper
             self.convoy.setPos(self.definition.convoy_spawn_point[0], self.definition.convoy_spawn_point[1])
             self.objects.append(self.convoy)
 
-            for i in range(self.definition.num_saucers):
-                enemy = saucer.Saucer(self)
-                x = random.random() * 1000 - 500
-                y = self.get_height_at(x) + 10 + random.random() * 25
-                enemy.setPos(x, y)
-                enemy.target = self.chopper
-                self.objects.append(enemy)
-
         elif self.definition.objective == "assault":
-            for i in range(self.definition.num_saucers):
-                enemy = saucer.Saucer(self)
-                x = random.random() * 1000 - 500
-                y = self.get_height_at(x) + 10 + random.random() * 25
-                enemy.setPos(x, y)
-                enemy.target = self.chopper
-                self.objects.append(enemy)
+            pass
 
         print(self.root.ls())
 

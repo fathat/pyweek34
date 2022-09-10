@@ -51,28 +51,31 @@ class Saucer:
             dist = self.body.position - self.target.body.position
 
             if abs(self.body.angle) < math.pi / 2:
-                force = self.body.mass * -self.space.gravity.y# 9.8
+                force = self.body.mass * -self.space.gravity.y
 
                 #attempt to stabilze
                 left = 0.5 * math.sin(self.body.angle) + 0.5
                 right = 1 - left
 
-                if dist.y > 10:
-                    left *= 0.9
-                    right *= 0.9
-                elif dist.y < -10:
-                    left *= 1.1
-                    right *= 1.1
-                else:
-                    #try to prevent sinking
-                    velocity = self.body.velocity_at_local_point((0,0))
+                mod_left = 1.0
+                mod_right = 1.0
 
-                    if velocity.y < 0:
-                        left *= 1.1
-                        right *= 1.1
+                velocity = self.body.velocity_at_local_point((0,0))
 
-                self.body.apply_force_at_local_point((0, force * right), (5,0))
-                self.body.apply_force_at_local_point((0, force * left), (-5,0))
+                if velocity.y < 0:
+                    mod_left = 1.1
+                    mod_right = 1.1
+
+                if abs(dist.x) < 50:
+                    if dist.y > 10:
+                        mod_left = 0.9
+                        mod_right = 0.9
+                    elif dist.y < -10:
+                        mod_left = 1.1
+                        mod_right = 1.1
+
+                self.body.apply_force_at_local_point((0, force * right * mod_left), (5,0))
+                self.body.apply_force_at_local_point((0, force * left * mod_right), (-5,0))
             else:
                 #give up
                 pass
