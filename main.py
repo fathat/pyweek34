@@ -71,6 +71,7 @@ class RedPlanetApp(ShowBase):
 
         script = open("scenes/space_choppa.txt", "r")
         for line in script:
+            if line.startswith("#") or line.startswith("//"): continue
             self.script.append(line.rstrip('\n').split(" "))
 
         self.progress_story()
@@ -142,6 +143,9 @@ class RedPlanetApp(ShowBase):
             return False
 
         if self.script[self.scriptIndex][0] == "image":
+            if len(self.script[self.scriptIndex] > 2):
+                # we have a sound to play
+                snd = self.loader.loadSfx(self.script[self.scriptIndex][2]).play()
             self.scene = cutscene.CutScene(self, self.script[self.scriptIndex][1])
         elif self.script[self.scriptIndex][0] == "level":
             self.scene = Scene(self, self.script[self.scriptIndex][1])
