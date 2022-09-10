@@ -45,6 +45,8 @@ class Saucer:
         self.bodyNode.remove_node()
 
     def update(self,dt):
+        dist = self.body.position - self.target.body.position
+
         if abs(self.body.angle) < math.pi / 2:
             force = self.body.mass * 9.8
 
@@ -52,12 +54,19 @@ class Saucer:
             left = 0.5 * math.sin(self.body.angle) + 0.5
             right = 1 - left
 
-            #try to prevent sinking
-            velocity = self.body.velocity_at_local_point((0,0))
-
-            if velocity.y < 0:
+            if dist.y > 10:
+                left *= 0.9
+                right *= 0.9
+            elif dist.y < -10:
                 left *= 1.1
                 right *= 1.1
+            else:
+                #try to prevent sinking
+                velocity = self.body.velocity_at_local_point((0,0))
+
+                if velocity.y < 0:
+                    left *= 1.1
+                    right *= 1.1
 
             self.body.apply_force_at_local_point((0, force * right), (5,0))
             self.body.apply_force_at_local_point((0, force * left), (-5,0))
@@ -66,7 +75,6 @@ class Saucer:
             pass
 
         #attack!!
-        dist = self.body.position - self.target.body.position
         self.weapon.update(dt)
 
         #move into range
