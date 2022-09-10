@@ -18,6 +18,7 @@ class Saucer:
         self.target = None
         self.space = scene.space
         self.destroyed = False
+        self.hp = 10
 
         self.state = State.IDLE
         self.bodyNode = Actor("models/Saucer.stl")
@@ -34,6 +35,8 @@ class Saucer:
         scene.space.add(self.body, self.shape)
 
         self.weapon = weapons.AlienMachineGun(scene)
+
+        self.snd = scene.app.loader.loadSfx("sound/587184__derplayer__explosion-02.wav")
 
     def destroy(self):
         self.shape.data = None
@@ -86,4 +89,8 @@ class Saucer:
         self.body.position = x, y
 
     def hurt(self, damage):
-        self.destroyed = True
+        self.hp -= damage
+        
+        if self.hp < 0:
+            self.destroyed = True
+            self.snd.play()

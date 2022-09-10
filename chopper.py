@@ -131,6 +131,8 @@ class Chopper:
         space.add(self.body, hull_shape, skid_shape, rotor_shape)
 
         self.weapons = [weapons.MachineGun(self.scene), weapons.RocketLauncher(self.scene)]
+
+        self.snd = scene.app.loader.loadSfx("sound/571629__ugila__item-pickup.wav")
         
         self.debug_lines = LineSegs()
         self.debug_lines.setColor(1, 0, 0, 1)
@@ -275,6 +277,7 @@ class Chopper:
         if other.shape.collision_type == masks.CATEGORY_HUMANOID:
             other.destroyed = True
             self.score += 1
+            self.snd.play()
         elif other.shape.collision_type == masks.CATEGORY_WALL:
             angle = utils.normalizeAngle(self.body.angle, 0.0)
             if abs(angle) > math.pi * 0.66:

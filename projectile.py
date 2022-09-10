@@ -92,4 +92,4 @@ class Bullet(Projectile):
 
     def collision(self, other):
         self.destroyed = True
-        self.inflict_pain(other, 10)
+        self.inflict_pain(other, 4)
