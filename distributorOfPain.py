@@ -32,3 +32,12 @@ def init(space):
 
     h = space.add_collision_handler(masks.CATEGORY_PROJECTILE, masks.CATEGORY_ENEMY)
     h.pre_solve = inflict_damage
+
+    h = space.add_collision_handler(masks.CATEGORY_PROJECTILE, masks.CATEGORY_CONVOY)
+    h.pre_solve = inflict_damage
+
+    h = space.add_collision_handler(masks.CATEGORY_CONVOY, masks.CATEGORY_HUMANOID)
+    h.pre_solve = inflict_damage
+
+    h = space.add_collision_handler(masks.CATEGORY_CONVOY, masks.CATEGORY_ENEMY)
+    h.pre_solve = inflict_damage
