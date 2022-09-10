@@ -36,6 +36,7 @@ class Scene:
         self.camera_fov = 35
         self.cam_dist = -80
         self.show_hud = True
+        self.kills = 0
        
         color = tuple(self.definition.background_color)
         expfog = Fog("Fog")
@@ -96,12 +97,12 @@ class Scene:
         self.fires = []
 
         #setup conditions
-        enemy = saucer.Saucer(self)
-        self.objects.append(enemy)
-        enemy.setPos(self.definition.spawn_point[0] + 50, self.definition.spawn_point[1] + 20)
-        enemy.target = self.chopper
-        
         if self.definition.objective == "rescue":
+            enemy = saucer.Saucer(self)
+            self.objects.append(enemy)
+            enemy.setPos(self.definition.spawn_point[0] + 50, self.definition.spawn_point[1] + 20)
+            enemy.target = self.chopper
+
             for i in range(self.definition.num_civilians):
                 human = humanoid.Humanoid(self)
                 human.target = self.chopper
@@ -116,6 +117,14 @@ class Scene:
             enemy.target = self.chopper
             self.objects.append(self.convoy)
         elif self.definition.objective == "assault":
+            for i in range(self.definition.num_saucers):
+                enemy = saucer.Saucer(self)
+                x = random.random() * 1000 - 500
+                y = self.get_height_at(x) + 10 + random.random() * 25
+                enemy.setPos(x, y)
+                enemy.target = self.chopper
+                self.objects.append(enemy)
+
             pass
 
         print(self.root.ls())
@@ -170,6 +179,8 @@ class Scene:
                 return True
             pass
         elif self.definition.objective == "assault":
+            if self.kills >= self.definition.objective_amount:
+                return True
             pass
 
         return False

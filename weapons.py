@@ -13,14 +13,14 @@ class RocketLauncher:
         if self.fire_timer < self.fire_rate:
             self.fire_timer += dt
 
-    def fire(self, body, direction: utils.Direction):
+    def fire(self, shooter, direction: utils.Direction):
         if self.fire_timer >= self.fire_rate:
             self.fire_timer = 0.0
-            firespot = body.local_to_world((4 * direction.value, 0))
+            firespot = shooter.body.local_to_world((4 * direction.value, 0))
             self.snd.play()
             self.scene.objects.append(
                 projectile.Missile(
-                    self.scene, "models/missile.stl", firespot, body.angle, 1000 * direction.value
+                    shooter, self.scene, "models/missile.stl", firespot, shooter.body.angle, 1000 * direction.value
                 )
             )
 
@@ -36,14 +36,14 @@ class MachineGun:
         if self.fire_timer < self.fire_rate:
             self.fire_timer += dt
 
-    def fire(self, body, direction: utils.Direction):
+    def fire(self, shooter, direction: utils.Direction):
         if self.fire_timer >= self.fire_rate:
             self.fire_timer = 0.0
-            firespot = body.local_to_world((4 * direction.value,0))
+            firespot = shooter.body.local_to_world((4 * direction.value,0))
             self.snd.play()
             self.scene.objects.append(
                 projectile.Bullet(
-                    self.scene, "models/bullet.stl", firespot, body.angle, 1000 * direction.value
+                    shooter, self.scene, "models/bullet.stl", firespot, shooter.body.angle, 1000 * direction.value
                 )
             )
 
@@ -59,13 +59,13 @@ class AlienMachineGun:
         if self.fire_timer < self.fire_rate:
             self.fire_timer += dt
 
-    def fire(self, body, direction: utils.Direction):
+    def fire(self, shooter, direction: utils.Direction):
         if self.fire_timer >= self.fire_rate:
             self.fire_timer = 0.0
-            firespot = body.local_to_world((5 * direction.value,0))
+            firespot = shooter.body.local_to_world((5 * direction.value,0))
             self.snd.play()
             self.scene.objects.append(
                 projectile.Bullet(
-                    self.scene, "models/bullet.stl", firespot, body.angle, 1000 * direction.value
+                    shooter, self.scene, "models/bullet.stl", firespot, shooter.body.angle, 1000 * direction.value
                 )
             )

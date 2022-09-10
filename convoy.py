@@ -19,6 +19,7 @@ class Convoy:
         self.space = scene.space
         self.destroyed = False
         self.hp = 10
+        self.team = 1
 
         self.bodyNode = Actor("models/truck.dae")
         self.bodyNode.reparentTo(scene.root)
