@@ -5,6 +5,7 @@ class scene:
         self.app = app
         self.counter = 0
         self.img = OnscreenImage(image=file)
+        self.img.reparentTo(app.render2d)
         self.show_hud = False
 
     def update(self, dt):
