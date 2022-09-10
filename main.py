@@ -68,6 +68,12 @@ class RedPlanetApp(ShowBase):
         self.script = []
         self.scriptIndex = 0
         self.first = False
+        self.cutscenemusic = self.loader.loadSfx('sound/339046__cabled-mess__filtered-note-08-01.flac')
+        self.cutscenemusic.setLoop(True)
+        self.gamemusic = self.loader.loadSfx('sound/570463__fusionwolf3740__epic-music-loop.wav')
+        self.gamemusic.setLoop(True)
+        self.gamemusic.setVolume(0.5)
+        self.playingcutscenemusic = False
 
         script = open("scenes/space_choppa.txt", "r")
         for line in script:
@@ -142,9 +148,19 @@ class RedPlanetApp(ShowBase):
             return False
 
         if self.script[self.scriptIndex][0] == "image":
+            if not self.playingcutscenemusic:
+                self.playingcutscenemusic = True
+                self.gamemusic.stop()
+                self.cutscenemusic.play()
+
             self.scene = cutscene.CutScene(self, self.script[self.scriptIndex][1])
         elif self.script[self.scriptIndex][0] == "level":
             self.scene = Scene(self, self.script[self.scriptIndex][1])
+
+            if self.playingcutscenemusic:
+                self.cutscenemusic.stop()
+                self.playingcutscenemusic = False
+                self.gamemusic.play()
 
         self.scriptIndex += 1
         return True
