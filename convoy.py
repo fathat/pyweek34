@@ -20,6 +20,7 @@ class Convoy:
         self.destroyed = False
         self.hp = 10
         self.team = 1
+        self.spawn_point = scene.definition.convoy_spawn_point
 
         self.bodyNode = Actor("models/truck.dae")
         self.bodyNode.reparentTo(scene.root)
