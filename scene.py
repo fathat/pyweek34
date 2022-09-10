@@ -31,6 +31,7 @@ class Scene:
         self.pymunk_timer = 0.0
         self.camera_fov = 35
         self.cam_dist = -80
+        self.show_hud = True
        
         color = tuple(self.definition.background_color)
         expfog = Fog("Fog")

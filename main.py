@@ -106,7 +106,7 @@ class RedPlanetApp(ShowBase):
     def update_task(self, task: Task):
         done = self.scene.update(self.clock.dt)
 
-        if False:
+        if self.scene.show_hud:
             #self.scene.update(self.clock.dt)
             self.altText.setText("Altitude: " + str(int(self.scene.chopper.pos.y)) + "m")
             self.speedText.setText(f"Speed: {int(self.scene.chopper.velocity())}")
