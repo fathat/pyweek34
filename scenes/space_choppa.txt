@@ -1,5 +1,12 @@
 image art/Title.png
-image art/Level1.png
+image art/intro/page-1.png
+image art/intro/page-2.png
+image art/intro/page-3.png
+image art/intro/page-4.png
+image art/intro/page-5.png
+image art/intro/page-6.png
+image art/intro/page-7.png
+image art/intro/page-8.png
 level debugscene
 level mars
 image art/Win.png

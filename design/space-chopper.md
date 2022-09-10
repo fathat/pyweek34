@@ -50,9 +50,21 @@ President and CEO of Jättefint Hår Aerospace.
 
 ### Intro
 
+In the Year 2050 A.D....
+
+You are Magnus Thorbergottarsson. Ace SPACE Pilot. Which is better than a regular pilot because SPACE. Men want to be you, and women want to be with you. Your magnificent hair is more famous than your incredible piloting skills.
+
+---
+
+In truth, you hold a dark secret...  you are bald. SPACE FORCE considers this a highly classified secret. If the people were to know that Magnus is bald, morale would be crushed.
+
+---
+
 A group of reporters is assembled for a press conference at Jättefint Hår Aerospace. On a large screen, the CEO of the corporation appears. He is here to unveil their latest new weapon: THE SPACE CHOPPER.
 
 Off to the side, Magnus, Ingirid, and Frothi are awaiting their turn to speak. Magnus nervously adjusts his wig when he thinks nobody is looking.
+
+Today is the unveiling of a TOP SECRET new weapon: THE SPACE CHOPPER. As president Mace Thornheart begins her speech, the signal is hijacked! Suddenly a martian appears on the TV!
 
 *Mace Thornheart begins her speech.*
 
