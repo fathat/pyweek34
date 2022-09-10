@@ -28,7 +28,7 @@ GltfLoader.global_settings = GltfSettings(
 )
 
 load_prc_file_data("", """
-    show-frame-rate-meter 1
+    show-frame-rate-meter 0
     sync-video 1
     win-size 1600 900
     window-title SPACE CHOPPER!!
@@ -112,10 +112,20 @@ class RedPlanetApp(ShowBase):
 
             if self.scene.show_hud:
                 #self.scene.update(self.clock.dt)
+                self.altText.show()
                 self.altText.setText("Altitude: " + str(int(self.scene.chopper.pos.y)) + "m")
                 self.speedText.setText(f"Speed: {int(self.scene.chopper.velocity())}")
+                self.speedText.show()
                 self.d2gText.setText(f"Distance To Ground: {int(self.scene.chopper.distance_to_ground)}")
+                self.d2gText.show()
                 self.capacityText.setText(f"Passengers: {self.scene.chopper.rescued}/{self.scene.chopper.capacity}")
+                self.capacityText.show()
+            else:
+                self.altText.hide()
+                self.capacityText.hide()
+                self.speedText.hide()
+                self.d2gText.hide()
+
             if done:
                 if not self.progress_story():
                     sys.exit() #this feels wrong...
