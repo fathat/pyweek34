@@ -120,9 +120,8 @@ class Scene:
             self.convoy = convoy.Convoy(self)
             self.convoy.target = self.chopper
             self.convoy.setPos(self.definition.convoy_spawn_point[0], self.definition.convoy_spawn_point[1])
-            enemy.target = self.chopper
             self.objects.append(self.convoy)
-        elif self.definition.objective == "assault":
+
             for i in range(self.definition.num_saucers):
                 enemy = saucer.Saucer(self)
                 x = random.random() * 1000 - 500
@@ -131,7 +130,14 @@ class Scene:
                 enemy.target = self.chopper
                 self.objects.append(enemy)
 
-            pass
+        elif self.definition.objective == "assault":
+            for i in range(self.definition.num_saucers):
+                enemy = saucer.Saucer(self)
+                x = random.random() * 1000 - 500
+                y = self.get_height_at(x) + 10 + random.random() * 25
+                enemy.setPos(x, y)
+                enemy.target = self.chopper
+                self.objects.append(enemy)
 
         print(self.root.ls())
 

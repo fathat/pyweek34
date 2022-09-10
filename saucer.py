@@ -23,7 +23,7 @@ class Saucer:
         self.team = 2
 
         self.state = State.IDLE
-        self.bodyNode = Actor("models/Saucer.stl")
+        self.bodyNode = Actor("models/Saucer.dae")
         self.bodyNode.reparentTo(scene.root)
 
         poly = ((-5,-1.25),(5,-1.25),(0,3))
@@ -47,49 +47,50 @@ class Saucer:
         self.bodyNode.remove_node()
 
     def update(self,dt):
-        dist = self.body.position - self.target.body.position
+        if self.hp > 0:
+            dist = self.body.position - self.target.body.position
 
-        if abs(self.body.angle) < math.pi / 2:
-            force = self.body.mass * -self.space.gravity.y# 9.8
+            if abs(self.body.angle) < math.pi / 2:
+                force = self.body.mass * -self.space.gravity.y# 9.8
 
-            #attempt to stabilze
-            left = 0.5 * math.sin(self.body.angle) + 0.5
-            right = 1 - left
+                #attempt to stabilze
+                left = 0.5 * math.sin(self.body.angle) + 0.5
+                right = 1 - left
 
-            if dist.y > 10:
-                left *= 0.9
-                right *= 0.9
-            elif dist.y < -10:
-                left *= 1.1
-                right *= 1.1
-            else:
-                #try to prevent sinking
-                velocity = self.body.velocity_at_local_point((0,0))
-
-                if velocity.y < 0:
+                if dist.y > 10:
+                    left *= 0.9
+                    right *= 0.9
+                elif dist.y < -10:
                     left *= 1.1
                     right *= 1.1
+                else:
+                    #try to prevent sinking
+                    velocity = self.body.velocity_at_local_point((0,0))
 
-            self.body.apply_force_at_local_point((0, force * right), (5,0))
-            self.body.apply_force_at_local_point((0, force * left), (-5,0))
-        else:
-            #give up
-            pass
+                    if velocity.y < 0:
+                        left *= 1.1
+                        right *= 1.1
 
-        #attack!!
-        self.weapon.update(dt)
+                self.body.apply_force_at_local_point((0, force * right), (5,0))
+                self.body.apply_force_at_local_point((0, force * left), (-5,0))
+            else:
+                #give up
+                pass
 
-        #move into range
-        if dist.x > 10 and dist.x < 100:
-            self.body.apply_force_at_local_point((-50, 0), (5,0))
-        elif dist.x < -10 and dist.x > -100:
-            self.body.apply_force_at_local_point((50, 0), (5,0))
+            #attack!!
+            self.weapon.update(dt)
 
-        #fire!
-        if dist.x > 0 and dist.x < 100:
-            self.weapon.fire(self, utils.Direction.LEFT)
-        elif dist.x < 0 and dist.x > -100:
-            self.weapon.fire(self, utils.Direction.RIGHT)
+            #move into range
+            if dist.x > 10 and dist.x < 100:
+                self.body.apply_force_at_local_point((-50, 0), (5,0))
+            elif dist.x < -10 and dist.x > -100:
+                self.body.apply_force_at_local_point((50, 0), (5,0))
+
+            #fire!
+            if dist.x > 0 and dist.x < 100:
+                self.weapon.fire(self, utils.Direction.LEFT)
+            elif dist.x < 0 and dist.x > -100:
+                self.weapon.fire(self, utils.Direction.RIGHT)
 
 
         self.bodyNode.setPos(self.body.position.x, 0, self.body.position.y)
@@ -102,6 +103,10 @@ class Saucer:
         self.hp -= damage
         
         if self.hp < 0:
-            self.destroyed = True
+            #self.destroyed = True
+            self.bodyNode.cleanup()
+            self.bodyNode.remove_node()
+            self.bodyNode= Actor("models/Saucer_Broken.dae")
+            self.bodyNode.reparentTo(self.scene.root)
             self.scene.kills += 1
             self.snd.play()
