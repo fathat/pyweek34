@@ -38,6 +38,7 @@ class Scene:
         self.cam_dist = -80
         self.show_hud = True
         self.kills = 0
+        self.rescued = 0
        
         color = tuple(self.definition.background_color)
         expfog = Fog("Fog")
@@ -177,7 +178,11 @@ class Scene:
 
         #win conditions
         if self.definition.objective == "rescue":
-            if self.chopper.rescued >= self.definition.objective_amount:
+            if abs(self.definition.spawn_point - self.chopper.body.position) < 10 and self.chopper.body.velocity.length < 1:
+                self.rescued += self.chopper.rescued
+                self.chopper.rescued = 0
+
+            if self.rescued >= self.definition.objective_amount:
                 return True
         elif self.definition.objective == "escort":
             if abs(self.definition.convoy_goal_point - self.convoy.body.position) < 10:
