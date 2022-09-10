@@ -41,6 +41,7 @@ class Chopper:
         self.app = scene.app
         self.input = scene.app.input
         self.rescued = 0
+        self.hp = 10
         self.flip_heading_t = 0
         self.flip_heading = False
         self.bodyNode = Actor("art/space-chopper/space-chopper.glb")
@@ -133,6 +134,7 @@ class Chopper:
         self.weapons = [weapons.MachineGun(self.scene), weapons.RocketLauncher(self.scene)]
 
         self.snd = scene.app.loader.loadSfx("sound/571629__ugila__item-pickup.wav")
+        self.crash_snd = scene.app.loader.loadSfx("sound/587184__derplayer__explosion-02.wav")
         
         self.debug_lines = LineSegs()
         self.debug_lines.setColor(1, 0, 0, 1)
@@ -291,3 +293,11 @@ class Chopper:
     def reset(self):
         self.body.position = self.spawn_point
         self.body.angle = 0
+        self.hp = 10
+        self.crash_snd.play()
+
+    def hurt(self, damage):
+        self.hp -= damage
+
+        if self.hp <= 0:
+            self.reset()
