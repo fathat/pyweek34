@@ -7,6 +7,7 @@ class RocketLauncher:
         self.scene = scene
         self.fire_rate = 1.0
         self.fire_timer = self.fire_rate
+        self.snd = scene.app.loader.loadSfx("sound/521377__jarusca__rocket-launch.mp3")
 
     def update(self, dt: float):
         if self.fire_timer < self.fire_rate:
@@ -16,6 +17,7 @@ class RocketLauncher:
         if self.fire_timer >= self.fire_rate:
             self.fire_timer = 0.0
             firespot = body.local_to_world((4 * direction.value, 0))
+            self.snd.play()
             self.scene.objects.append(
                 projectile.Missile(
                     self.scene, "models/missile.stl", firespot, body.angle, 1000 * direction.value
@@ -28,6 +30,7 @@ class MachineGun:
         self.scene = scene
         self.fire_rate = 0.1
         self.fire_timer = self.fire_rate
+        self.snd = scene.app.loader.loadSfx("sound/382735__schots__gun-shot.aiff")
 
     def update(self, dt: float):
         if self.fire_timer < self.fire_rate:
@@ -37,6 +40,7 @@ class MachineGun:
         if self.fire_timer >= self.fire_rate:
             self.fire_timer = 0.0
             firespot = body.local_to_world((4 * direction.value,0))
+            self.snd.play()
             self.scene.objects.append(
                 projectile.Bullet(
                     self.scene, "models/bullet.stl", firespot, body.angle, 1000 * direction.value
@@ -49,6 +53,7 @@ class AlienMachineGun:
         self.scene = scene
         self.fire_rate = 1.0
         self.fire_timer = self.fire_rate
+        self.snd = scene.app.loader.loadSfx("sound/382735__schots__gun-shot.aiff")
 
     def update(self, dt: float):
         if self.fire_timer < self.fire_rate:
@@ -58,6 +63,7 @@ class AlienMachineGun:
         if self.fire_timer >= self.fire_rate:
             self.fire_timer = 0.0
             firespot = body.local_to_world((5 * direction.value,0))
+            self.snd.play()
             self.scene.objects.append(
                 projectile.Bullet(
                     self.scene, "models/bullet.stl", firespot, body.angle, 1000 * direction.value

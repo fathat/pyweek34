@@ -5,7 +5,6 @@ from panda3d.core import Filename
 import masks
 import utils
 
-
 class Projectile:
     def inflict_pain(self, other, amount):
         if hasattr(other, "hurt"):
@@ -17,6 +16,7 @@ class Missile(Projectile):
         self.scene = scene
         self.space = scene.space
         self.destroyed = False
+        self.snd = scene.app.loader.loadSfx("sound/132833__bekir-virtualdj__explode.wav")
 
         self.bodyNode = scene.app.loader.loadModel(model_filename)
         self.bodyNode.reparentTo(scene.app.render)
@@ -48,7 +48,7 @@ class Missile(Projectile):
         self.destroyed = True
         self.inflict_pain(other, 10)
         self.scene.fires.append(Fire(self.scene, "./art/effects/fireish.ptf", self.body.position))
-        #todo hurt other
+        self.snd.play()
 
 
 class Fire:
