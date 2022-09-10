@@ -19,6 +19,8 @@ class InputManager:
     boost_pressed = False
     reverse_boost_pressed = False
 
+    action = False
+
     def __init__(self, app):
 
         # check for a gamepad
@@ -64,6 +66,9 @@ class InputManager:
         app.accept('gamepad-dpad_left', self.on_select_weapon, [0])
         app.accept('gamepad-dpad_right', self.on_select_weapon, [1])
         app.accept('0-up', self.on_choppa_reset, [False])
+        app.accept('mouse1', self.on_action, [True])
+        app.accept('mouse1-up', self.on_action, [False])
+        
 
     def connect(self, device):
         """Event handler that is called when a device is discovered."""
@@ -194,4 +199,7 @@ class InputManager:
 
     def on_choppa_reset(self, down):
         self.chopper_reset = True
+
+    def on_action(self, down):
+        self.action = down
 

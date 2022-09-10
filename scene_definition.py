@@ -17,3 +17,5 @@ class SceneDefinition:
         self.sun_color = self.scene_cfg.get('sun_color')
         self.background_color = self.scene_cfg.get('background')
         self.spawn_point = self.scene_cfg.get('spawn_point', [0, 0])
+        self.objective = self.scene_cfg.get_string('objective')
+        self.objective_amount = self.scene_cfg.get_float('objective_amount')

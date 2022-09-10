@@ -40,7 +40,7 @@ class Chopper:
         self.space = space
         self.app = scene.app
         self.input = scene.app.input
-        self.score = 0
+        self.rescued = 0
         self.flip_heading_t = 0
         self.flip_heading = False
         self.bodyNode = Actor("art/space-chopper/space-chopper.glb")
@@ -96,11 +96,11 @@ class Chopper:
             (width*scale, self.hull_mid*scale), 
             (0, self.hull_top*scale)
         ]
-        hull_shape = pymunk.Poly(self.body, hull_vertices)
-        hull_shape.friction = 0.5
-        hull_shape.filter = pymunk.ShapeFilter(categories=CATEGORY_PLAYER)
-        hull_shape.collision_type = CATEGORY_PLAYER
-        hull_shape.data = self
+        self.hull_shape = pymunk.Poly(self.body, hull_vertices)
+        self.hull_shape.friction = 0.5
+        self.hull_shape.filter = pymunk.ShapeFilter(categories=CATEGORY_PLAYER)
+        self.hull_shape.collision_type = CATEGORY_PLAYER
+        self.hull_shape.data = self
         
         # skids
         skid_vertices = [
@@ -109,11 +109,11 @@ class Chopper:
             ( width*scale,  (self.skid_floor + self.skid_height)*scale),  
             (-width*scale,  (self.skid_floor + self.skid_height)*scale)
         ]
-        skid_shape = pymunk.Poly(self.body, skid_vertices)
-        skid_shape.friction = 0.5
-        skid_shape.filter = pymunk.ShapeFilter(categories=CATEGORY_PLAYER)
-        skid_shape.collision_type = CATEGORY_PLAYER
-        skid_shape.data = self
+        self.skid_shape = pymunk.Poly(self.body, skid_vertices)
+        self.skid_shape.friction = 0.5
+        self.skid_shape.filter = pymunk.ShapeFilter(categories=CATEGORY_PLAYER)
+        self.skid_shape.collision_type = CATEGORY_PLAYER
+        self.skid_shape.data = self
 
         # rotor
         rotor_vertices = [
@@ -122,13 +122,13 @@ class Chopper:
             ( self.rotor_radius*scale,  (self.rotor_floor + self.rotor_height)*scale),  
             (-self.rotor_radius*scale,  (self.rotor_floor + self.rotor_height)*scale)
         ]
-        rotor_shape = pymunk.Poly(self.body, rotor_vertices)
-        rotor_shape.friction = 0.5
-        rotor_shape.filter = pymunk.ShapeFilter(categories=CATEGORY_PLAYER)
-        rotor_shape.collision_type = CATEGORY_PLAYER
-        rotor_shape.data = self
+        self.rotor_shape = pymunk.Poly(self.body, rotor_vertices)
+        self.rotor_shape.friction = 0.5
+        self.rotor_shape.filter = pymunk.ShapeFilter(categories=CATEGORY_PLAYER)
+        self.rotor_shape.collision_type = CATEGORY_PLAYER
+        self.rotor_shape.data = self
         
-        space.add(self.body, hull_shape, skid_shape, rotor_shape)
+        space.add(self.body, self.hull_shape, self.skid_shape, self.rotor_shape)
 
         self.weapons = [weapons.MachineGun(self.scene), weapons.RocketLauncher(self.scene)]
 
@@ -164,6 +164,11 @@ class Chopper:
         # self.particles.setFactory("PointParticleFactory")
         # self.particles.setRenderer("SpriteParticleRenderer")
         # self.particles.setEmitter("SphereVolumeEmitter")
+
+    def destroy(self):
+        self.space.remove(self.body, self.hull_shape, self.skid_shape, self.rotor_shape)
+        self.bodyNode.cleanup()
+        self.bodyNode.remove_node()
 
     def velocity(self) -> float:
         return self.body.velocity.length
@@ -276,7 +281,7 @@ class Chopper:
     def collision(self, other):
         if other.shape.collision_type == masks.CATEGORY_HUMANOID:
             other.destroyed = True
-            self.score += 1
+            self.rescued += 1
             self.snd.play()
         elif other.shape.collision_type == masks.CATEGORY_WALL:
             angle = utils.normalizeAngle(self.body.angle, 0.0)

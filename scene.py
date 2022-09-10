@@ -90,18 +90,19 @@ class Scene:
         self.objects = []
         self.fires = []
 
-        x = -99
-        for i in range(0, 10):
-            human = humanoid.Humanoid(self)
-            human.target = self.chopper
-            human.setPos(x, 20)
-            x += 20
-            self.objects.append(human)
-
         enemy = saucer.Saucer(self)
         self.objects.append(enemy)
         enemy.setPos(self.definition.spawn_point[0] + 50, self.definition.spawn_point[1] + 20)
         enemy.target = self.chopper
+
+        if self.definition.objective == "rescue":
+            x = -99
+            for i in range(0, 10):
+                human = humanoid.Humanoid(self)
+                human.target = self.chopper
+                human.setPos(x, 20)
+                x += 20
+                self.objects.append(human)
 
         print(self.root.ls())
 
@@ -137,3 +138,19 @@ class Scene:
             # self.camera_fov = utils.move_towards(self.camera_fov, fov_target, 5, dt)
 
             # self.app.camLens.set_fov(self.camera_fov)
+
+        if self.definition.objective == "rescue":
+            if self.chopper.rescued >= self.definition.objective_amount:
+                return True
+
+        return False
+
+    def destroy(self):
+        self.root.remove_node()
+
+        for i in range(len(self.objects) - 1, -1, -1):
+            self.objects[i].destroy()
+            self.objects.pop(i)
+
+        self.chopper.destroy()
+        self.space = None #how the hell do I clean this up?

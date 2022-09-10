@@ -8,6 +8,8 @@ from direct.task.TaskManagerGlobal import taskMgr
 from direct.filter.CommonFilters import CommonFilters
 
 import utils
+import cutscene
+import sys
 from scene import Scene
 from gltf.loader import GltfLoader
 from gltf.converter import GltfSettings
@@ -63,7 +65,15 @@ class RedPlanetApp(ShowBase):
         self.camLens.set_fov(90)
         self.camLens.set_near_far(1, 10000)
         self.camera.setPos(0, -50, 0)
-        self.scene = Scene(self, 'debugscene')
+        self.script = []
+        self.scriptIndex = 0
+
+        script = open("scenes/space_choppa.txt", "r")
+        for line in script:
+            self.script.append(line.rstrip('\n').split(" "))
+
+        self.progress_story()
+
         self.render.setShaderInput('push', self.pushBias)
         self.render.setColorOff()
 
@@ -85,25 +95,47 @@ class RedPlanetApp(ShowBase):
                         shadow=(0, 0, 0, 1), parent=self.a2dBottomLeft,
                         pos=(0.05, 0.23), align=TextNode.ALeft)
 
-        self.worldText = OnscreenText(text="I am world", font=self.font, style=2, fg=(1, 1, 1, 1), bg=(0, 0, 0, 0.5), scale=.05,
-                        shadow=(0, 0, 0, 1), parent=self.aspect2d,
-                        pos=(0.05, 0.23), align=TextNode.ACenter)
+        #self.worldText = OnscreenText(text="I am world", font=self.font, style=2, fg=(1, 1, 1, 1), bg=(0, 0, 0, 0.5), scale=.05,
+        #                shadow=(0, 0, 0, 1), parent=self.aspect2d,
+        #                pos=(0.05, 0.23), align=TextNode.ACenter)
 
         self.clock = ClockObject.getGlobalClock()
         self.updateTask = taskMgr.add(self.update_task, "update_task")
 
 
     def update_task(self, task: Task):
-        self.scene.update(self.clock.dt)
-        self.altText.setText("Altitude: " + str(int(self.scene.chopper.pos.y)) + "m")
-        self.speedText.setText(f"Speed: {int(self.scene.chopper.velocity())}")
-        self.d2gText.setText(f"Distance To Ground: {int(self.scene.chopper.distance_to_ground)}")
+        done = self.scene.update(self.clock.dt)
 
-        coord = utils.node_coord_in_2d(self.scene.testNP, self.cam)
-        self.worldText.setPos(coord.x, coord.z+10)
-        #self.skidText.setText(f"Skid: {int(self.scene.chopper.skid_body.position.x)}, {int(self.scene.chopper.skid_body.position.y)}")
+        if False:
+            #self.scene.update(self.clock.dt)
+            self.altText.setText("Altitude: " + str(int(self.scene.chopper.pos.y)) + "m")
+            self.speedText.setText(f"Speed: {int(self.scene.chopper.velocity())}")
+            self.d2gText.setText(f"Distance To Ground: {int(self.scene.chopper.distance_to_ground)}")
+
+            coord = utils.node_coord_in_2d(self.scene.testNP, self.cam)
+            #self.worldText.setPos(coord.x, coord.z+10)
+            #self.skidText.setText(f"Skid: {int(self.scene.chopper.skid_body.position.x)}, {int(self.scene.chopper.skid_body.position.y)}")
+
+        if done:
+            if not self.progress_story():
+                sys.exit() #this feels wrong...
 
         return Task.cont
+
+    def progress_story(self):
+        if self.scene != None:
+            self.scene.destroy()
+
+        if self.scriptIndex >= len(self.script):
+            return False
+
+        if self.script[self.scriptIndex][0] == "image":
+            self.scene = cutscene.scene(self, self.script[self.scriptIndex][1])
+        elif self.script[self.scriptIndex][0] == "level":
+            self.scene = Scene(self, self.script[self.scriptIndex][1])
+
+        self.scriptIndex += 1
+        return True
 
 if __name__ == '__main__':
     RedPlanetApp().run()
