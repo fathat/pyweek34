@@ -1,5 +1,8 @@
 image art/Title.png
 image art/Level1.png
 level debugscene
+image art/Level2.png
+level escort
+image art/Level3.png
 level mars
 image art/Win.png

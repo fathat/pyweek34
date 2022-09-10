@@ -4,6 +4,7 @@ from panda3d.core import *
 import chopper
 import humanoid
 import saucer
+import convoy
 import pymunk
 from pymunk import Vec2d
 
@@ -109,7 +110,11 @@ class Scene:
                 human.setPos(x, y)
                 self.objects.append(human)
         elif self.definition.objective == "escort":
-            pass
+            self.convoy = convoy.Convoy(self)
+            self.convoy.target = self.chopper
+            self.convoy.setPos(self.definition.convoy_spawn_point[0], self.definition.convoy_spawn_point[1])
+            enemy.target = self.chopper
+            self.objects.append(self.convoy)
         elif self.definition.objective == "assault":
             pass
 
@@ -161,6 +166,8 @@ class Scene:
             if self.chopper.rescued >= self.definition.objective_amount:
                 return True
         elif self.definition.objective == "escort":
+            if abs(self.definition.convoy_goal_point - self.convoy.body.position) < 10:
+                return True
             pass
         elif self.definition.objective == "assault":
             pass

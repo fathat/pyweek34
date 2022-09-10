@@ -20,6 +20,8 @@ class SceneDefinition:
         self.spawn_point = self.scene_cfg.get('spawn_point', [0, 0])
         self.objective = self.scene_cfg.get_string('objective')
         self.objective_amount = self.scene_cfg.get_float('objective_amount')
+        self.convoy_spawn_point = self.scene_cfg.get('convoy_spawn_point', [0, 0])
+        self.convoy_goal_point = self.scene_cfg.get('convoy_goal_point', [0, 0])
         self.civilian_models = self.scene_cfg.get('civilian_models')
         self.num_civilians = self.scene_cfg.get_int('num_civilians', 40)
 
