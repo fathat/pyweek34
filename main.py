@@ -91,7 +91,7 @@ class RedPlanetApp(ShowBase):
         self.d2gText = OnscreenText(text="D2G: ?", font=self.font, style=2, fg=(1, 1, 1, 1), bg=(0, 0, 0, 0.5), scale=.05,
                         shadow=(0, 0, 0, 1), parent=self.a2dBottomLeft,
                         pos=(0.05, 0.17), align=TextNode.ALeft)
-        self.skidText = OnscreenText(text="Skid: ?", font=self.font, style=2, fg=(1, 1, 1, 1), bg=(0, 0, 0, 0.5), scale=.05,
+        self.capacityText = OnscreenText(text="Passengers: 0", font=self.font, style=2, fg=(1, 1, 1, 1), bg=(0, 0, 0, 0.5), scale=.05,
                         shadow=(0, 0, 0, 1), parent=self.a2dBottomLeft,
                         pos=(0.05, 0.23), align=TextNode.ALeft)
 
@@ -111,11 +111,7 @@ class RedPlanetApp(ShowBase):
             self.altText.setText("Altitude: " + str(int(self.scene.chopper.pos.y)) + "m")
             self.speedText.setText(f"Speed: {int(self.scene.chopper.velocity())}")
             self.d2gText.setText(f"Distance To Ground: {int(self.scene.chopper.distance_to_ground)}")
-
-            coord = utils.node_coord_in_2d(self.scene.testNP, self.cam)
-            #self.worldText.setPos(coord.x, coord.z+10)
-            #self.skidText.setText(f"Skid: {int(self.scene.chopper.skid_body.position.x)}, {int(self.scene.chopper.skid_body.position.y)}")
-
+            self.capacityText.setText(f"Passengers: {self.scene.chopper.rescued}/{self.scene.chopper.capacity}")
         if done:
             if not self.progress_story():
                 sys.exit() #this feels wrong...
@@ -130,7 +126,7 @@ class RedPlanetApp(ShowBase):
             return False
 
         if self.script[self.scriptIndex][0] == "image":
-            self.scene = cutscene.scene(self, self.script[self.scriptIndex][1])
+            self.scene = cutscene.CutScene(self, self.script[self.scriptIndex][1])
         elif self.script[self.scriptIndex][0] == "level":
             self.scene = Scene(self, self.script[self.scriptIndex][1])
 

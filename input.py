@@ -68,6 +68,8 @@ class InputManager:
         app.accept('0-up', self.on_choppa_reset, [False])
         app.accept('mouse1', self.on_action, [True])
         app.accept('mouse1-up', self.on_action, [False])
+        app.accept('gamepad-start', self.on_action, [True])
+        app.accept('gamepad-start-up', self.on_action, [False])
         
 
     def connect(self, device):

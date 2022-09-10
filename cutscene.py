@@ -1,6 +1,6 @@
 from direct.gui.OnscreenImage import OnscreenImage
 
-class scene:
+class CutScene:
     def __init__(self, app, file):
         self.app = app
         self.counter = 0

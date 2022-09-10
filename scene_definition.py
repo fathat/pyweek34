@@ -1,5 +1,6 @@
 from typing import List, Union
 from pyhocon import ConfigFactory
+import random
 
 class SceneDefinition:
     scene_cfg = None
@@ -19,3 +20,8 @@ class SceneDefinition:
         self.spawn_point = self.scene_cfg.get('spawn_point', [0, 0])
         self.objective = self.scene_cfg.get_string('objective')
         self.objective_amount = self.scene_cfg.get_float('objective_amount')
+        self.civilian_models = self.scene_cfg.get('civilian_models')
+        self.num_civilians = self.scene_cfg.get_int('num_civilians', 40)
+
+    def random_civ_model(self):
+        return random.choice(self.civilian_models)

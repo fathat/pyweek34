@@ -31,6 +31,9 @@ class Chopper:
     scene: "scene.Scene"
     space: pymunk.Space
 
+    rescued: int = 0
+    capacity: int = 4
+
     def __init__(self, scene: "scene.Scene", spawn_point: Tuple[float, float]):
         width, scale = self.width, self.scale
         space = scene.space
@@ -41,6 +44,7 @@ class Chopper:
         self.app = scene.app
         self.input = scene.app.input
         self.rescued = 0
+        self.capacity = 4
         self.hp = 10
         self.flip_heading_t = 0
         self.flip_heading = False
@@ -172,6 +176,9 @@ class Chopper:
         self.bodyNode.cleanup()
         self.bodyNode.remove_node()
 
+    def is_full(self) -> bool:
+        return self.rescued >= self.capacity
+
     def velocity(self) -> float:
         return self.body.velocity.length
 
@@ -282,9 +289,14 @@ class Chopper:
 
     def collision(self, other):
         if other.shape.collision_type == masks.CATEGORY_HUMANOID:
-            other.destroyed = True
-            self.rescued += 1
-            self.snd.play()
+            if self.body.velocity.length > 15:
+                if not other.dead:
+                    other.hurt(100)
+            else:
+                if not other.dead and self.rescued < self.capacity:
+                    other.destroyed = True
+                    self.rescued += 1
+                    self.snd.play()
         elif other.shape.collision_type == masks.CATEGORY_WALL:
             angle = utils.normalizeAngle(self.body.angle, 0.0)
             if abs(angle) > math.pi * 0.66:

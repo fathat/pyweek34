@@ -1,3 +1,5 @@
+import random
+
 from panda3d.core import *
 import chopper
 import humanoid
@@ -19,6 +21,7 @@ class Scene:
     space: pymunk.Space = None
     world: ModelNode
     camera_fov: float = 35
+    num_rescued: int = 0
 
     def __init__(self, app, name):
         self.definition = SceneDefinition(name)
@@ -73,12 +76,12 @@ class Scene:
         self.extraSunNP.reparentTo(self.root)
         self.root.setLight(self.extraSunNP)
 
-        self.testNP = self.root.attachNewNode(TextNode("Cool Path Bro"))
-        self.testNP.node().text = "Cool Path Bruh"
-        self.testNP.node().setTextScale(2)
-        self.testNP.node().setTextColor(LVector4f(1.0, 0.0, 0.0, 1.0))
-        self.testNP.node().setShadowColor(LVector4f(0.0, 0.0, 0.0, 1.0))
-        self.testNP.setPos(25, 5, 20)
+        # self.testNP = self.root.attachNewNode(TextNode("Cool Path Bro"))
+        # self.testNP.node().text = "Cool Path Bruh"
+        # self.testNP.node().setTextScale(2)
+        # self.testNP.node().setTextColor(LVector4f(1.0, 0.0, 0.0, 1.0))
+        # self.testNP.node().setShadowColor(LVector4f(0.0, 0.0, 0.0, 1.0))
+        # self.testNP.setPos(25, 5, 20)
 
         self.collisionDebugNP = self.root.attachNewNode("Collision Lines")
         self.collisionDebugNP.hide(masks.SUN_SHADOW_CAMERA_MASK)
@@ -97,15 +100,23 @@ class Scene:
         enemy.target = self.chopper
 
         if self.definition.objective == "rescue":
-            x = -99
-            for i in range(0, 10):
+            for i in range(self.definition.num_civilians):
                 human = humanoid.Humanoid(self)
                 human.target = self.chopper
-                human.setPos(x, 20)
-                x += 20
+                x = random.random() * 1000 - 500
+                y = self.get_height_at(x) + 2
+                human.setPos(x, y)
                 self.objects.append(human)
 
         print(self.root.ls())
+
+    def get_height_at(self, x):
+        segment_query_info_list = self.space.segment_query((x, 1000), (x, -2000), 0.1, pymunk.ShapeFilter(mask=masks.CATEGORY_WALL))
+        segment_query_info_list.sort(key=lambda x: x.alpha)
+        if len(segment_query_info_list) == 0: return -1
+        if utils.almost_zero(segment_query_info_list[0].alpha):
+            return 0
+        return segment_query_info_list[0].point.y
 
     def update(self, dt):
         self.pymunk_timer += dt
