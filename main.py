@@ -143,21 +143,25 @@ class RedPlanetApp(ShowBase):
 
     def progress_story(self):
         if self.scene != None:
+            if self.scene.cutscene_snd:
+                self.scene.cutscene_snd.stop()
             self.scene.destroy()
 
         if self.scriptIndex >= len(self.script):
             return False
 
         if self.script[self.scriptIndex][0] == "image":
+            snd = None
             if len(self.script[self.scriptIndex]) > 2:
                 # we have a sound to play
-                snd = self.loader.loadSfx(self.script[self.scriptIndex][2]).play()
+                snd = self.loader.loadSfx(self.script[self.scriptIndex][2])
+                snd.play()
             if not self.playingcutscenemusic:
                 self.playingcutscenemusic = True
                 self.gamemusic.stop()
                 self.cutscenemusic.play()
 
-            self.scene = cutscene.CutScene(self, self.script[self.scriptIndex][1])
+            self.scene = cutscene.CutScene(self, self.script[self.scriptIndex][1], snd)
         elif self.script[self.scriptIndex][0] == "level":
             self.scene = Scene(self, self.script[self.scriptIndex][1])
 

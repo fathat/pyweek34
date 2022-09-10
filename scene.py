@@ -39,6 +39,7 @@ class Scene:
         self.show_hud = True
         self.kills = 0
         self.rescued = 0
+        self.cutscene_snd = None
        
         color = tuple(self.definition.background_color)
         expfog = Fog("Fog")
