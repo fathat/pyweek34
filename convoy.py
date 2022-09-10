@@ -33,7 +33,7 @@ class Convoy:
         self.shape.data = self
         scene.space.add(self.body, self.shape)
 
-        self.crash_snd = scene.app.loader.loadSfx("sound/587184__derplayer__explosion-02.wav")
+        self.crash_snd = scene.app.loader.loadSfx("sound/521377__jarusca__rocket-launch.mp3")
 
     def destroy(self):
         self.shape.data = None

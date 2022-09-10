@@ -29,6 +29,7 @@ class Scene:
         self.definition = SceneDefinition(name)
         self.root = NodePath("Scene Root")
         self.root.reparentTo(app.render)
+        self.saucer_spawn_delay = 5
         self.app = app
         self.space = pymunk.Space()
         self.space.gravity = (0.0, self.definition.gravity)
@@ -159,6 +160,24 @@ class Scene:
 
     def update(self, dt):
         self.pymunk_timer += dt
+
+        self.saucer_spawn_delay -= dt
+
+        if self.saucer_spawn_delay < 0:
+            enemy = saucer.Saucer(self)
+            x = random.random() * 1000 - 500
+            y = self.get_height_at(x) + 10 + random.random() * 25
+
+            if abs(x - self.definition.spawn_point[0]) < 100:
+                if x > self.definition.spawn_point[0]:
+                    x += 100
+                else:
+                    x -= 100
+
+            enemy.setPos(x, y)
+            enemy.target = self.chopper
+            self.objects.append(enemy)
+            self.saucer_spawn_delay = random.random() * 5 + 5
 
         while self.pymunk_timer >= pymunk_step:
             self.pymunk_timer -= pymunk_step

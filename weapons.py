@@ -30,7 +30,7 @@ class MachineGun:
         self.scene = scene
         self.fire_rate = 0.1
         self.fire_timer = self.fire_rate
-        self.snd = scene.app.loader.loadSfx("sound/382735__schots__gun-shot.aiff")
+        self.snd = scene.app.loader.loadSfx("sound/177912__medetix__pc-quick-lazer.wav")
 
     def update(self, dt: float):
         if self.fire_timer < self.fire_rate:
@@ -53,7 +53,7 @@ class AlienMachineGun:
         self.scene = scene
         self.fire_rate = 1.0
         self.fire_timer = self.fire_rate
-        self.snd = scene.app.loader.loadSfx("sound/382735__schots__gun-shot.aiff")
+        self.snd = scene.app.loader.loadSfx("sound/177912__medetix__pc-quick-lazer.wav")
 
     def update(self, dt: float):
         if self.fire_timer < self.fire_rate:
