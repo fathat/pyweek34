@@ -38,7 +38,7 @@ class Saucer:
 
         self.weapon = weapons.AlienMachineGun(scene)
 
-        self.snd = scene.app.loader.loadSfx("sound/587184__derplayer__explosion-02.wav")
+        self.snd = scene.app.loader.loadSfx("sound/177912__medetix__pc-quick-lazer.wav")
 
     def destroy(self):
         self.shape.data = None
