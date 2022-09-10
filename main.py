@@ -149,7 +149,7 @@ class RedPlanetApp(ShowBase):
             return False
 
         if self.script[self.scriptIndex][0] == "image":
-            if len(self.script[self.scriptIndex] > 2):
+            if len(self.script[self.scriptIndex]) > 2:
                 # we have a sound to play
                 snd = self.loader.loadSfx(self.script[self.scriptIndex][2]).play()
             if not self.playingcutscenemusic:
