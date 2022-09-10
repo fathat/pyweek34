@@ -91,11 +91,12 @@ class Scene:
         self.objects = []
         self.fires = []
 
+        #setup conditions
         enemy = saucer.Saucer(self)
         self.objects.append(enemy)
         enemy.setPos(self.definition.spawn_point[0] + 50, self.definition.spawn_point[1] + 20)
         enemy.target = self.chopper
-
+        
         if self.definition.objective == "rescue":
             x = -99
             for i in range(0, 10):
@@ -104,6 +105,10 @@ class Scene:
                 human.setPos(x, 20)
                 x += 20
                 self.objects.append(human)
+        elif self.definition.objective == "escort":
+            pass
+        elif self.definition.objective == "assault":
+            pass
 
         print(self.root.ls())
 
@@ -140,9 +145,14 @@ class Scene:
 
             # self.app.camLens.set_fov(self.camera_fov)
 
+        #win conditions
         if self.definition.objective == "rescue":
             if self.chopper.rescued >= self.definition.objective_amount:
                 return True
+        elif self.definition.objective == "escort":
+            pass
+        elif self.definition.objective == "assault":
+            pass
 
         return False
 
