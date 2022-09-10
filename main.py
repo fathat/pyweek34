@@ -6,6 +6,8 @@ from direct.actor import Actor
 from direct.task import Task
 from direct.task.TaskManagerGlobal import taskMgr
 from direct.filter.CommonFilters import CommonFilters
+
+import utils
 from scene import Scene
 from gltf.loader import GltfLoader
 from gltf.converter import GltfSettings
@@ -34,7 +36,7 @@ load_prc_file_data("", """
     want-directtools #f
     want-tk #f
     load-file-type p3assimp
-    model-cache-dir ./model-cache
+    model-cache-dir
     hardware-animated-vertices true
     basic-shaders-only false
 """)
@@ -63,6 +65,7 @@ class RedPlanetApp(ShowBase):
         self.camera.setPos(0, -50, 0)
         self.scene = Scene(self, 'debugscene')
         self.render.setShaderInput('push', self.pushBias)
+        self.render.setColorOff()
 
         # materials = self.render.findAllMaterials()
         # for material in materials:
@@ -82,6 +85,10 @@ class RedPlanetApp(ShowBase):
                         shadow=(0, 0, 0, 1), parent=self.a2dBottomLeft,
                         pos=(0.05, 0.23), align=TextNode.ALeft)
 
+        self.worldText = OnscreenText(text="I am world", font=self.font, style=2, fg=(1, 1, 1, 1), bg=(0, 0, 0, 0.5), scale=.05,
+                        shadow=(0, 0, 0, 1), parent=self.aspect2d,
+                        pos=(0.05, 0.23), align=TextNode.ACenter)
+
         self.clock = ClockObject.getGlobalClock()
         self.updateTask = taskMgr.add(self.update_task, "update_task")
 
@@ -91,6 +98,9 @@ class RedPlanetApp(ShowBase):
         self.altText.setText("Altitude: " + str(int(self.scene.chopper.pos.y)) + "m")
         self.speedText.setText(f"Speed: {int(self.scene.chopper.velocity())}")
         self.d2gText.setText(f"Distance To Ground: {int(self.scene.chopper.distance_to_ground)}")
+
+        coord = utils.node_coord_in_2d(self.scene.testNP, self.cam)
+        self.worldText.setPos(coord.x, coord.z+10)
         #self.skidText.setText(f"Skid: {int(self.scene.chopper.skid_body.position.x)}, {int(self.scene.chopper.skid_body.position.y)}")
 
         return Task.cont

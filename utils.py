@@ -140,10 +140,10 @@ def normalizeAngle(a, center):
     return a - TWO_PI * math.floor((a + math.pi - center) / TWO_PI)
 
 
-def node_coord_in_2d(nodePath: NodePath, cam: Camera):
+def node_coord_in_2d(nodePath: NodePath, cam: Camera) -> LPoint3f:
     coord3d = nodePath.getPos(cam)
     coord2d = Point2()
-    cam.getLens().project(coord3d, coord2d)
+    cam.node().getLens().project(coord3d, coord2d)
     coord_in_render2d = Point3(coord2d[0], 0, coord2d[1])
     coord_in_aspect2d = aspect2d.getRelativePoint(render2d, coord_in_render2d)
     return coord_in_aspect2d

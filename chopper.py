@@ -11,6 +11,7 @@ import weapons
 import masks
 import utils
 
+MAX_DIST_TO_GROUND = 200
 
 class Chopper:
     width: float = 3.2
@@ -215,6 +216,17 @@ class Chopper:
             self.body.apply_force_at_local_point((0, 200 * im.pitch_axis()), (-self.width, 0))
             self.body.apply_force_at_local_point((0, -200 * im.pitch_axis()), (self.width, 0))
 
+        self.distance_to_ground = self.calculate_distance_to_ground()
+
+        # if self.distance_to_ground > 50:
+        #     self.body.apply_force_at_world_point((0, (self.distance_to_ground / MAX_DIST_TO_GROUND) * -200.0), (self.body.position.x, self.body.position.y))
+        # if self.distance_to_ground == -1:
+        #     self.body.apply_force_at_world_point((0, -200.0), (self.body.position.x, self.body.position.y))
+
+        if self.distance_to_ground > 100 and self.body.velocity.y > 0:
+            self.body.velocity = self.body.velocity.x, damp(self.body.velocity.y, 0.05, dt)
+            self.body.apply_force_at_world_point((0, -8), (self.body.position.x, self.body.position.y))
+
         #damping_rate = 1.0 - clamp(self.velocity() / 100, 0, 1)
         #self.body.velocity = damp(self.body.velocity, damping_rate, dt)
         self.body.angular_velocity = damp(self.body.angular_velocity, 0.15, dt)
@@ -231,7 +243,6 @@ class Chopper:
 
         self.bodyNode.setPos(self.pos.x, 0, self.pos.y)
 
-        self.distance_to_ground = self.calculate_distance_to_ground()
 
         if self.flip_heading:
             if self.flip_heading_t >= 1.0:
@@ -254,7 +265,7 @@ class Chopper:
         return segment_query_info_list[0]
 
     def calculate_distance_to_ground(self):
-        segment_query_info_list = self.space.segment_query((self.body.position.x, self.body.position.y), (self.body.position.x, self.body.position.y - 200), 0.1, pymunk.ShapeFilter(mask=CATEGORY_WALL))
+        segment_query_info_list = self.space.segment_query((self.body.position.x, self.body.position.y), (self.body.position.x, self.body.position.y - MAX_DIST_TO_GROUND), 0.1, pymunk.ShapeFilter(mask=CATEGORY_WALL))
         segment_query_info_list.sort(key=lambda x: x.alpha)
         if len(segment_query_info_list) == 0: return -1
         if almost_zero(segment_query_info_list[0].alpha): return 0

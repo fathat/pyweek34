@@ -14,14 +14,14 @@ class State(Enum):
     WAVE = auto()
 
 class Humanoid:
-    def __init__(self, base, space):
+    def __init__(self, scene):
         self.target = None
-        self.space = space
+        self.space = scene.space
         self.destroyed = False
 
         self.state = State.IDLE
         self.bodyNode = Actor("art/creative-commons/Ultimate Modular Men- Feb 2022/Individual Characters/glTF/Spacesuit.gltf")
-        self.bodyNode.reparentTo(base.render)
+        self.bodyNode.reparentTo(scene.root)
         self.bodyNode.loop("Idle")
         self.bodyNode.setShaderAuto()
         self.bodyNode.setTextureOff(1)
@@ -35,7 +35,7 @@ class Humanoid:
         self.shape.filter = pymunk.ShapeFilter(categories=masks.CATEGORY_HUMANOID)
         self.shape.collision_type = masks.CATEGORY_HUMANOID
         self.shape.data = self
-        space.add(self.body, self.shape)
+        scene.space.add(self.body, self.shape)
 
     def destroy(self):
         self.shape.data = None

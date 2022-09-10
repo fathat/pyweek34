@@ -43,6 +43,7 @@ class Scene:
         self.worldNP.reparentTo(self.root)
         self.worldNP.setFog(expfog)
         self.worldNP.setShaderAuto()
+        self.worldNP.setColorOff()
 
         if self.definition.texture_hack:
             self.worldNP.setTextureOff(1)
@@ -60,7 +61,7 @@ class Scene:
         self.sunNP.reparentTo(self.app.render)
         self.sunNP.setPos(0, 0, 500)
         self.sunNP.setHpr(0, -90, 0)
-        self.app.render.setLight(self.sunNP)
+        self.root.setLight(self.sunNP)
 
         print("Shadow buffer size", self.sun.getShadowBufferSize())
 
@@ -69,12 +70,20 @@ class Scene:
         self.extraSun.setDirection(LVector3(0.5, 1, -0.5).normalized())
         self.extraSunNP = app.render.attachNewNode(self.extraSun)
         self.extraSunNP.reparentTo(self.root)
-        self.app.render.setLight(self.extraSunNP)
+        self.root.setLight(self.extraSunNP)
+
+        self.testNP = self.root.attachNewNode(TextNode("Cool Path Bro"))
+        self.testNP.node().text = "Cool Path Bruh"
+        self.testNP.node().setTextScale(2)
+        self.testNP.node().setTextColor(LVector4f(1.0, 0.0, 0.0, 1.0))
+        self.testNP.node().setShadowColor(LVector4f(0.0, 0.0, 0.0, 1.0))
+        self.testNP.setPos(25, 5, 20)
 
         self.collisionDebugNP = self.root.attachNewNode("Collision Lines")
         self.collisionDebugNP.hide(masks.SUN_SHADOW_CAMERA_MASK)
         self.collisionDebugNP.clearShader()
         add_node_path_as_collider(self.world, self.worldNP, self.space, self.collisionDebugNP)
+        #add_node_path_as_collider(self.world, self.worldNP, self.space, None)
 
         self.chopper = chopper.Chopper(self, self.definition.spawn_point)
 
@@ -83,7 +92,7 @@ class Scene:
 
         x = -99
         for i in range(0, 10):
-            human = humanoid.Humanoid(app, self.space)
+            human = humanoid.Humanoid(self)
             human.target = self.chopper
             human.setPos(x, 20)
             x += 20
@@ -93,6 +102,8 @@ class Scene:
         self.objects.append(enemy)
         enemy.setPos(self.definition.spawn_point[0] + 50, self.definition.spawn_point[1] + 20)
         enemy.target = self.chopper
+
+        print(self.root.ls())
 
     def update(self, dt):
         self.pymunk_timer += dt
@@ -110,12 +121,14 @@ class Scene:
                     self.objects[i].update(pymunk_step)
             
             self.sunNP.setPos(self.chopper.pos.x, 0, self.chopper.pos.y + 250)
-            
-            cam_dist = -45 * abs(self.chopper.body.velocity_at_local_point((0,0))) / 10
-            cam_dist = max(-45, min(cam_dist, -20))
+
+            if self.chopper.distance_to_ground < 5:
+                cam_dist = -45 * abs(self.chopper.body.velocity_at_local_point((0,0))) / 10
+                cam_dist = max(-45, min(cam_dist, -20))
+            else:
+                cam_dist = -45
 
             self.cam_dist = utils.firstorder_lowpass(self.cam_dist, cam_dist, dt, 1.0)
-
             #self.app.camera.setPos(self.chopper.pos.x, -45, self.chopper.pos.y + 5)
             self.app.camera.setPos(self.chopper.pos.x, self.cam_dist, self.chopper.pos.y + 15)
             self.app.camera.lookAt(self.chopper.pos.x, 0, self.chopper.pos.y)
