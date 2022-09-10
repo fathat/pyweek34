@@ -15,10 +15,12 @@ class State(Enum):
 
 class Saucer:
     def __init__(self, scene: "scene.Scene"):
+        self.scene = scene
         self.target = None
         self.space = scene.space
         self.destroyed = False
         self.hp = 10
+        self.team = 2
 
         self.state = State.IDLE
         self.bodyNode = Actor("models/Saucer.stl")
@@ -48,7 +50,7 @@ class Saucer:
         dist = self.body.position - self.target.body.position
 
         if abs(self.body.angle) < math.pi / 2:
-            force = self.body.mass * 9.8
+            force = self.body.mass * -self.space.gravity.y# 9.8
 
             #attempt to stabilze
             left = 0.5 * math.sin(self.body.angle) + 0.5
@@ -85,9 +87,9 @@ class Saucer:
 
         #fire!
         if dist.x > 0 and dist.x < 100:
-            self.weapon.fire(self.body, utils.Direction.LEFT)
+            self.weapon.fire(self, utils.Direction.LEFT)
         elif dist.x < 0 and dist.x > -100:
-            self.weapon.fire(self.body, utils.Direction.RIGHT)
+            self.weapon.fire(self, utils.Direction.RIGHT)
 
 
         self.bodyNode.setPos(self.body.position.x, 0, self.body.position.y)
@@ -101,4 +103,5 @@ class Saucer:
         
         if self.hp < 0:
             self.destroyed = True
+            self.scene.kills += 1
             self.snd.play()

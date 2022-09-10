@@ -8,5 +8,8 @@ image art/intro/page-6.png
 image art/intro/page-7.png
 image art/intro/page-8.png
 level debugscene
+image art/Level2.png
+level escort
+image art/Level3.png
 level mars
 image art/Win.png

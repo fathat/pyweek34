@@ -4,6 +4,7 @@ from panda3d.core import *
 import chopper
 import humanoid
 import saucer
+import convoy
 import pymunk
 from pymunk import Vec2d
 
@@ -35,6 +36,7 @@ class Scene:
         self.camera_fov = 35
         self.cam_dist = -80
         self.show_hud = True
+        self.kills = 0
        
         color = tuple(self.definition.background_color)
         expfog = Fog("Fog")
@@ -95,12 +97,12 @@ class Scene:
         self.fires = []
 
         #setup conditions
-        enemy = saucer.Saucer(self)
-        self.objects.append(enemy)
-        enemy.setPos(self.definition.spawn_point[0] + 50, self.definition.spawn_point[1] + 20)
-        enemy.target = self.chopper
-        
         if self.definition.objective == "rescue":
+            enemy = saucer.Saucer(self)
+            self.objects.append(enemy)
+            enemy.setPos(self.definition.spawn_point[0] + 50, self.definition.spawn_point[1] + 20)
+            enemy.target = self.chopper
+
             for i in range(self.definition.num_civilians):
                 human = humanoid.Humanoid(self)
                 human.target = self.chopper
@@ -109,8 +111,20 @@ class Scene:
                 human.setPos(x, y)
                 self.objects.append(human)
         elif self.definition.objective == "escort":
-            pass
+            self.convoy = convoy.Convoy(self)
+            self.convoy.target = self.chopper
+            self.convoy.setPos(self.definition.convoy_spawn_point[0], self.definition.convoy_spawn_point[1])
+            enemy.target = self.chopper
+            self.objects.append(self.convoy)
         elif self.definition.objective == "assault":
+            for i in range(self.definition.num_saucers):
+                enemy = saucer.Saucer(self)
+                x = random.random() * 1000 - 500
+                y = self.get_height_at(x) + 10 + random.random() * 25
+                enemy.setPos(x, y)
+                enemy.target = self.chopper
+                self.objects.append(enemy)
+
             pass
 
         print(self.root.ls())
@@ -161,8 +175,12 @@ class Scene:
             if self.chopper.rescued >= self.definition.objective_amount:
                 return True
         elif self.definition.objective == "escort":
+            if abs(self.definition.convoy_goal_point - self.convoy.body.position) < 10:
+                return True
             pass
         elif self.definition.objective == "assault":
+            if self.kills >= self.definition.objective_amount:
+                return True
             pass
 
         return False

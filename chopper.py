@@ -46,6 +46,7 @@ class Chopper:
         self.rescued = 0
         self.capacity = 4
         self.hp = 10
+        self.team = 1
         self.flip_heading_t = 0
         self.flip_heading = False
         self.bodyNode = Actor("art/space-chopper/space-chopper.glb")
@@ -225,7 +226,7 @@ class Chopper:
         self.weapons[im.weapon_selection].update(dt)
 
         if im.fire_pressed:
-            self.weapons[im.weapon_selection].fire(self.body, self.direction)
+            self.weapons[im.weapon_selection].fire(self, self.direction)
 
         if not_zero(im.pitch_axis()):
             self.body.apply_force_at_world_point((10 * im.pitch_axis(), 0), (self.body.position.x, self.body.position.y))

@@ -67,6 +67,7 @@ class RedPlanetApp(ShowBase):
         self.camera.setPos(0, -50, 0)
         self.script = []
         self.scriptIndex = 0
+        self.first = False
 
         script = open("scenes/space_choppa.txt", "r")
         for line in script:
@@ -104,17 +105,22 @@ class RedPlanetApp(ShowBase):
 
 
     def update_task(self, task: Task):
-        done = self.scene.update(self.clock.dt)
+        if self.first:
+            self.first = False
+        else:
+            done = self.scene.update(self.clock.dt)
 
-        if self.scene.show_hud:
-            #self.scene.update(self.clock.dt)
-            self.altText.setText("Altitude: " + str(int(self.scene.chopper.pos.y)) + "m")
-            self.speedText.setText(f"Speed: {int(self.scene.chopper.velocity())}")
-            self.d2gText.setText(f"Distance To Ground: {int(self.scene.chopper.distance_to_ground)}")
-            self.capacityText.setText(f"Passengers: {self.scene.chopper.rescued}/{self.scene.chopper.capacity}")
-        if done:
-            if not self.progress_story():
-                sys.exit() #this feels wrong...
+            if self.scene.show_hud:
+                #self.scene.update(self.clock.dt)
+                self.altText.setText("Altitude: " + str(int(self.scene.chopper.pos.y)) + "m")
+                self.speedText.setText(f"Speed: {int(self.scene.chopper.velocity())}")
+                self.d2gText.setText(f"Distance To Ground: {int(self.scene.chopper.distance_to_ground)}")
+                self.capacityText.setText(f"Passengers: {self.scene.chopper.rescued}/{self.scene.chopper.capacity}")
+            if done:
+                if not self.progress_story():
+                    sys.exit() #this feels wrong...
+
+                self.first = True
 
         return Task.cont
 

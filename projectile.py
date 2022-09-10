@@ -7,14 +7,16 @@ import utils
 
 class Projectile:
     def inflict_pain(self, other, amount):
-        if hasattr(other, "hurt"):
-            other.hurt(amount)
+        if hasattr(self.shooter, "team") and hasattr(other, "team") and hasattr(other, "hurt"):
+            if self.shooter.team != other.team:
+                other.hurt(amount)
 
 
 class Missile(Projectile):
-    def __init__(self, scene, model_filename, pos, angle, force):
+    def __init__(self, shooter, scene, model_filename, pos, angle, force):
         self.scene = scene
         self.space = scene.space
+        self.shooter = shooter
         self.destroyed = False
         self.snd = scene.app.loader.loadSfx("sound/132833__bekir-virtualdj__explode.wav")
 
@@ -61,9 +63,10 @@ class Fire:
 
 
 class Bullet(Projectile):
-    def __init__(self, scene, model_filename, pos, angle, force):
+    def __init__(self, shooter, scene, model_filename, pos, angle, force):
         self.space = scene.space
         self.destroyed = False
+        self.shooter = shooter
 
         self.bodyNode = scene.app.loader.loadModel(model_filename)
         self.bodyNode.reparentTo(scene.root)
