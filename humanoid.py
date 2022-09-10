@@ -16,18 +16,12 @@ class State(Enum):
     WAVE = auto()
     DEAD = auto()
 
-things_to_say = [
-    "help!",
-    "save me!",
-    "I'm too young to die!",
-    "your wig is terrible!",
-    "I love lamp!",
-]
 
 class Humanoid:
     def __init__(self, scene: "scene.Scene"):
         self.target = None
         self.space = scene.space
+        self.scene = scene
         self.destroyed = False
         self.dead = False
         self.scream_timer = random.random() * 7 + 3.0
@@ -41,7 +35,7 @@ class Humanoid:
         self.bodyNode.setTextureOff(1)
 
         self.textNP = scene.root.attachNewNode(TextNode("Human Text"))
-        self.textNP.node().text = random.choice(things_to_say)
+        self.textNP.node().text = random.choice(scene.definition.civilian_lines)
         self.textNP.node().setTextScale(1.25)
         self.textNP.node().setTextColor(LVector4f(0.0, 0.0, 0.0, 1.0))
         self.textNP.node().setCardColor(LVector4f(0.0, 0.0, 0.0, 0.5))
@@ -81,7 +75,7 @@ class Humanoid:
             self.textNP.show()
         if self.scream_timer < 0:
             self.textNP.hide()
-            self.textNP.node().text = random.choice(things_to_say)
+            self.textNP.node().text = random.choice(self.scene.definition.civilian_lines)
             self.scream_timer = random.random() * 7 + 3
 
         if self.target and not self.target.is_full():

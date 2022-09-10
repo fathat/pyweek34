@@ -15,3 +15,5 @@ E / Gamepad A: Forward Thrust
 Q / Gamepad B: Reverse Thrust
 1 / DPad Left: Machine Gun
 2 / DPad Right: Missiles
+Arrow Keys / Right Stick: Change Direction
+0: Reset Chopper

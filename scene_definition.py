@@ -33,6 +33,7 @@ class SceneDefinition:
         self.convoy_goal_point = self.scene_cfg.get('convoy_goal_point', [0, 0])
         self.civilian_models = self.scene_cfg.get('civilian_models', 0)
         self.num_civilians = self.scene_cfg.get_int('num_civilians', 40)
+        self.civilian_lines = self.scene_cfg.get('civilian_lines', [])
         self.num_saucers = self.scene_cfg.get_int('num_saucers', 0)
         buildings = self.scene_cfg.get("buildings", [])
         self.buildings = []
