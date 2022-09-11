@@ -28,8 +28,8 @@ class Convoy:
         self.body = pymunk.Body(10, 100)
         self.shape = pymunk.Circle(self.body, 6.5/2)
         self.shape.friction = 0.5
-        self.shape.filter = pymunk.ShapeFilter(categories=masks.CATEGORY_ENEMY)
-        self.shape.collision_type = masks.CATEGORY_ENEMY
+        self.shape.filter = pymunk.ShapeFilter(categories=masks.CATEGORY_CONVOY)
+        self.shape.collision_type = masks.CATEGORY_CONVOY
         self.shape.data = self
         scene.space.add(self.body, self.shape)
 
@@ -44,7 +44,7 @@ class Convoy:
     def update(self,dt):
         dist = self.body.position - self.target.body.position
 
-        if abs(dist) < 40:
+        if abs(dist) < 40 and self.body.velocity.length < 10:
             #self.body.apply_force_at_local_point((50, 0), (0,0))
             self.body.apply_force_at_world_point((25, 0), (self.body.position.x,self.body.position.y + 1))
 
@@ -65,3 +65,11 @@ class Convoy:
         
         if self.hp < 0:
             self.reset()
+
+    def collision(self, other):
+        if other.shape.collision_type == masks.CATEGORY_ENEMY:
+            print("yep")
+        if other.shape.collision_type == masks.CATEGORY_ENEMY and other.hp < 1:
+            other.destroyed = True
+        elif hasattr(other, "hurt"):
+            other.hurt(100)

@@ -105,7 +105,7 @@ class Saucer:
     def hurt(self, damage):
         self.hp -= damage
         
-        if self.hp < 0:
+        if self.hp < 1:
             #self.destroyed = True
             self.bodyNode.cleanup()
             self.bodyNode.remove_node()
