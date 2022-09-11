@@ -107,7 +107,7 @@ class Scene:
         #add stuff to the level
         for i in range(self.definition.num_saucers):
             enemy = saucer.Saucer(self)
-            x = random.random() * 1000 - 500
+            x = random.random() * 400 - 200
             y = self.get_height_at(x) + 10 + random.random() * 25
 
             if abs(x - self.definition.spawn_point[0]) < 100:
@@ -166,9 +166,9 @@ class Scene:
         if self.saucer_spawn_delay < 0:
             saucers = [x for x in self.objects if type(x).__name__ == 'Saucer' and x.hp >= 1]
 
-            if len(saucers) <= 4:
+            if len(saucers) <= 7:
                 enemy = saucer.Saucer(self)
-                x = random.random() * 1000 - 500
+                x = random.random() * 600 - 300
                 y = self.get_height_at(x) + 10 + random.random() * 25
 
                 if abs(x - self.definition.spawn_point[0]) < 100:
