@@ -90,7 +90,7 @@ class Scene:
         # self.testNP.setPos(25, 5, 20)
 
         self.collisionDebugNP = self.root.attachNewNode("Collision Lines")
-        self.collisionDebugNP.hide(masks.SUN_SHADOW_CAMERA_MASK)
+        self.collisionDebugNP.hide()
         self.collisionDebugNP.clearShader()
         add_node_path_as_collider(self.worldNP, self.space, self.collisionDebugNP)
         #add_node_path_as_collider(self.world, self.worldNP, self.space, None)
@@ -164,20 +164,23 @@ class Scene:
         self.saucer_spawn_delay -= dt
 
         if self.saucer_spawn_delay < 0:
-            enemy = saucer.Saucer(self)
-            x = random.random() * 1000 - 500
-            y = self.get_height_at(x) + 10 + random.random() * 25
+            saucers = [x for x in self.objects if type(x).__name__ == 'Saucer']
 
-            if abs(x - self.definition.spawn_point[0]) < 100:
-                if x > self.definition.spawn_point[0]:
-                    x += 100
-                else:
-                    x -= 100
+            if len(saucers) <= 3:
+                enemy = saucer.Saucer(self)
+                x = random.random() * 1000 - 500
+                y = self.get_height_at(x) + 10 + random.random() * 25
 
-            enemy.setPos(x, y)
-            enemy.target = self.chopper
-            self.objects.append(enemy)
-            self.saucer_spawn_delay = random.random() * 5 + 5
+                if abs(x - self.definition.spawn_point[0]) < 100:
+                    if x > self.definition.spawn_point[0]:
+                        x += 100
+                    else:
+                        x -= 100
+
+                enemy.setPos(x, y)
+                enemy.target = self.chopper
+                self.objects.append(enemy)
+            self.saucer_spawn_delay = random.random() * 15 + 10
 
         while self.pymunk_timer >= pymunk_step:
             self.pymunk_timer -= pymunk_step
@@ -194,10 +197,10 @@ class Scene:
             self.sunNP.setPos(self.chopper.pos.x, 0, self.chopper.pos.y + 250)
 
             if self.chopper.distance_to_ground < 5:
-                cam_dist = -45 * abs(self.chopper.body.velocity_at_local_point((0,0))) / 10
-                cam_dist = max(-45, min(cam_dist, -20))
+                cam_dist = -65 * abs(self.chopper.body.velocity_at_local_point((0,0))) / 10
+                cam_dist = max(-65, min(cam_dist, -20))
             else:
-                cam_dist = -45
+                cam_dist = -65
 
             self.cam_dist = utils.firstorder_lowpass(self.cam_dist, cam_dist, dt, 1.0)
             #self.app.camera.setPos(self.chopper.pos.x, -45, self.chopper.pos.y + 5)
