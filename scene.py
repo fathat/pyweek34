@@ -166,7 +166,7 @@ class Scene:
         if self.saucer_spawn_delay < 0:
             saucers = [x for x in self.objects if type(x).__name__ == 'Saucer']
 
-            if len(saucers) <= 3:
+            if len(saucers) <= 4:
                 enemy = saucer.Saucer(self)
                 x = random.random() * 1000 - 500
                 y = self.get_height_at(x) + 10 + random.random() * 25
@@ -180,7 +180,7 @@ class Scene:
                 enemy.setPos(x, y)
                 enemy.target = self.chopper
                 self.objects.append(enemy)
-            self.saucer_spawn_delay = random.random() * 15 + 10
+            self.saucer_spawn_delay = random.random() * 8 + 8
 
         while self.pymunk_timer >= pymunk_step:
             self.pymunk_timer -= pymunk_step
