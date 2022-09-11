@@ -41,6 +41,8 @@ load_prc_file_data("", """
     model-cache-dir ./model-cache
     hardware-animated-vertices true
     basic-shaders-only false
+    framebuffer-multisample 1
+    multisamples 2
 """)
 
 class RedPlanetApp(ShowBase):
