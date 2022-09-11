@@ -1,22 +1,22 @@
-#image art/Title.png
-#image art/intro/page-1.png
-#image art/intro/page-2.png
-#image art/intro/page-3.png
-#image art/intro/page-4.png sound/wat.mp3
-#image art/intro/page-5.png sound/wat.mp3
-#image art/intro/page-6.png sound/wet.mp3
-#image art/intro/page-7.png sound/singing.mp3
-#image art/intro/page-7_5.png
-#image art/intro/page-8.png
-#level debugscene
-#image art/intro/mid-1.png
-#image art/intro/mid-2.png
-#image art/intro/mid-3.png
-#image art/intro/mid-4.png sound/wet.mp3
-#image art/intro/mid-5.png sound/wat.mp3
-#image art/intro/mid-6.png sound/wet.mp3
-#image art/intro/mid-7.png sound/wat.mp3
-#image art/intro/mid-8.png
+image art/Title.png
+image art/intro/page-1.png
+image art/intro/page-2.png
+image art/intro/page-3.png
+image art/intro/page-4.png sound/wat.mp3
+image art/intro/page-5.png sound/wat.mp3
+image art/intro/page-6.png sound/wet.mp3
+image art/intro/page-7.png sound/singing.mp3
+image art/intro/page-7_5.png
+image art/intro/page-8.png
+level debugscene
+image art/intro/mid-1.png
+image art/intro/mid-2.png
+image art/intro/mid-3.png
+image art/intro/mid-4.png sound/wet.mp3
+image art/intro/mid-5.png sound/wat.mp3
+image art/intro/mid-6.png sound/wet.mp3
+image art/intro/mid-7.png sound/wat.mp3
+image art/intro/mid-8.png
 level escort
 image art/intro/end-1.png sound/wet.mp3
 image art/intro/end-2.png sound/wat.mp3
