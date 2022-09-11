@@ -164,7 +164,7 @@ class Scene:
         self.saucer_spawn_delay -= dt
 
         if self.saucer_spawn_delay < 0:
-            saucers = [x for x in self.objects if type(x).__name__ == 'Saucer']
+            saucers = [x for x in self.objects if type(x).__name__ == 'Saucer' and x.hp >= 1]
 
             if len(saucers) <= 4:
                 enemy = saucer.Saucer(self)
