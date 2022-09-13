@@ -1,3 +1,5 @@
+import os
+os.environ["PANDA_PRC_DIR"] = "./etc"
 from direct.showbase.ShowBase import ShowBase
 from panda3d.physics import *
 from panda3d.core import *
@@ -6,18 +8,23 @@ from direct.actor import Actor
 from direct.task import Task
 from direct.task.TaskManagerGlobal import taskMgr
 from direct.filter.CommonFilters import CommonFilters
+from direct.particles.ParticleManagerGlobal import ParticleSystemManager
 
 import utils
 import cutscene
 import sys
+import os
 from scene import Scene
 from gltf.loader import GltfLoader
 from gltf.converter import GltfSettings
+import gltf
 
 from input import InputManager
 import simplepbr
 
-GltfLoader.global_settings = GltfSettings(
+
+
+gltf_settings = GltfSettings(
     physics_engine='builtin',
     print_scene=True,
     skip_axis_conversion=False,
@@ -27,23 +34,51 @@ GltfLoader.global_settings = GltfSettings(
     animations='embed'
 )
 
-load_prc_file_data("", """
-    show-frame-rate-meter 0
-    sync-video 1
-    win-size 1600 900
-    window-title SPACE CHOPPER!!
-    want-pstats 0
-    pstats-tasks 0
-    task-timer-verbose 0
-    want-directtools #f
-    want-tk #f
-    load-file-type p3assimp
-    model-cache-dir ./model-cache
-    hardware-animated-vertices true
-    basic-shaders-only false
-    framebuffer-multisample 1
-    multisamples 2
-""")
+# load_prc_file_data("", """
+#     load-display pandagl
+#     win-origin -2 -2
+    
+#     model-path    $MAIN_DIR
+
+#     # The framebuffer-hardware flag forces it to use an accelerated driver.
+#     # The framebuffer-software flag forces it to use a software renderer.
+#     # If you set both to false, it will use whatever's available.
+
+#     framebuffer-hardware #t
+#     framebuffer-software #f
+
+#     # These set the minimum requirements for the framebuffer.
+#     # A value of 1 means: get as many bits as possible,
+#     # consistent with the other framebuffer requirements.
+
+#     depth-bits 1
+#     color-bits 1 1 1
+
+#     # Enable audio using the OpenAL audio library by default:
+
+#     audio-library-name p3openal_audio
+
+#     # Enable the model-cache, but only for models, not textures.
+
+#     model-cache-dir ./model-cache
+#     model-cache-textures #f
+
+#     show-frame-rate-meter 0
+#     sync-video 1
+#     win-size 1920 1080
+#     window-title SPACE CHOPPER!!
+#     want-pstats 0
+#     pstats-tasks 0
+#     task-timer-verbose 0
+#     want-directtools #f
+#     want-tk #f
+#     load-file-type p3assimp
+#     model-cache-dir ./model-cache
+#     hardware-animated-vertices true
+#     basic-shaders-only false
+#     framebuffer-multisample 1
+#     multisamples 2
+# """)
 
 class RedPlanetApp(ShowBase):
     gamepad = None
@@ -51,6 +86,8 @@ class RedPlanetApp(ShowBase):
 
     def __init__(self):
         ShowBase.__init__(self)
+        getModelPath().appendDirectory(os.getcwd())
+        gltf.patch_loader(self.loader, gltf_settings)
         self.pushBias = 0.04
         self.font = self.loader.loadFont("art/fonts/bedstead/bedstead.otf")
         

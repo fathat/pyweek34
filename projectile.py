@@ -63,6 +63,7 @@ class Fire:
 
 
 class Bullet(Projectile):
+
     def __init__(self, shooter, scene, model_filename, pos, angle, force):
         self.space = scene.space
         self.destroyed = False

@@ -49,7 +49,7 @@ class Chopper:
         self.team = 1
         self.flip_heading_t = 0
         self.flip_heading = False
-        self.bodyNode = Actor("art/space-chopper/space-chopper.glb")
+        self.bodyNode = Actor("./art/space-chopper/space-chopper.glb")
         self.bodyNode.reparentTo(scene.root)
         self.bodyNode.loop("blade")
 
